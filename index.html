@@ -60,7 +60,12 @@
     .card.sunset{background:linear-gradient(135deg,#fa709a 0%,#fee140 100%)}
     .card.ocean{background:linear-gradient(135deg,#2e3192 0%,#1bffff 100%)}
 
-    .card-inner{background:#fffffffa;border-radius:20px;padding:30px;position:relative}
+    .card-inner{border-radius:20px;padding:30px;position:relative;transition:background .3s}
+    .card.royal .card-inner{background:rgba(102,126,234,.08)}
+    .card.gold .card-inner{background:rgba(247,151,30,.08)}
+    .card.emerald .card-inner{background:rgba(17,153,142,.08)}
+    .card.sunset .card-inner{background:rgba(250,112,154,.08)}
+    .card.ocean .card-inner{background:rgba(46,49,146,.08)}
     .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
     .card-title{font-size:24px;font-weight:900;color:#2c3e50;display:flex;align-items:center;gap:12px;text-transform:uppercase;letter-spacing:1px}
     .export-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:800;transition:.3s;box-shadow:0 6px 20px rgba(102,126,234,.4);text-transform:uppercase;letter-spacing:.5px}
@@ -581,14 +586,17 @@
     async function exportCard(cardId, fileName){
       const node = document.getElementById(cardId);
       const button = node.querySelector('.export-btn');
+      const badge = node.querySelector('.percent-badge');
       
-      // Ocultar botão antes de capturar
+      // Ocultar botão e badge antes de capturar
       button.style.display = 'none';
+      badge.style.display = 'none';
       
       const canvas = await html2canvas(node,{scale:2,backgroundColor:null,useCORS:true});
       
-      // Mostrar botão novamente
+      // Mostrar botão e badge novamente
       button.style.display = 'block';
+      badge.style.display = 'flex';
       
       const url = canvas.toDataURL('image/png');
       const a = document.createElement('a');
