@@ -121,8 +121,8 @@
     /* Label FUEL */
     .fuel-label{
       position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-      font-size:48px;font-weight:900;color:#334155;
-      letter-spacing:8px;z-index:10;
+      font-size:32px;font-weight:900;color:#334155;
+      letter-spacing:6px;z-index:10;
       text-shadow:0 0 20px rgba(255,255,255,.9),0 2px 4px rgba(0,0,0,.3);
     }
 
@@ -580,7 +580,16 @@
 
     async function exportCard(cardId, fileName){
       const node = document.getElementById(cardId);
+      const button = node.querySelector('.export-btn');
+      
+      // Ocultar botão antes de capturar
+      button.style.display = 'none';
+      
       const canvas = await html2canvas(node,{scale:2,backgroundColor:null,useCORS:true});
+      
+      // Mostrar botão novamente
+      button.style.display = 'block';
+      
       const url = canvas.toDataURL('image/png');
       const a = document.createElement('a');
       a.href = url; a.download = `${fileName}.png`; a.click();
