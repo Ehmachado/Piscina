@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Metas - Piscina de Dinheiro</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .controls {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 25px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+            color: #1a1a2e;
+            font-size: 36px;
+            font-weight: 900;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .palette-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .palette-btn {
+            padding: 20px;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .palette-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: left 0.4s;
+        }
+
+        .palette-btn:hover::before {
+            left: 100%;
+        }
+
+        .palette-btn.active {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.8);
+        }
+
+        .palette-royal {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .palette-gold {
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+        }
+
+        .palette-emerald {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .palette-sunset {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .palette-ocean {
+            background: linear-gradient(135deg, #2e3192 0%, #1bffff 100%);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .input-group {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 18px;
+            border: 3px solid #dee2e6;
+            transition: all 0.3s;
+        }
+
+        .input-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .input-group h3 {
+            margin-bottom: 18px;
+            color: #2c3e50;
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 800;
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 13px;
+            color: #555;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            padding: 14px;
+            border: 3px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+            transform: scale(1.02);
+        }
+
+        .input-subgroup {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 2px dashed #adb5bd;
+        }
+
+        .input-subgroup h4 {
+            font-size: 14px;
+            color: #495057;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 35px;
+        }
+
+        .card {
+            border-radius: 25px;
+            padding: 35px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 35px 90px rgba(0,0,0,0.4);
+        }
+
+        .card.royal {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .card.gold {
+            background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+        }
+
+        .card.emerald {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .card.sunset {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .card.ocean {
+            background: linear-gradient(135deg, #2e3192 0%, #1bffff 100%);
+        }
+
+        .card-inner {
+            background: rgba(255,255,255,0.98);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 900;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 800;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .export-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.6);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            border-radius: 25px;
+            overflow: hidden;
+            position: relative;
+            margin: 25px 0;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.15);
+            border: 3px solid rgba(0,0,0,0.05);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 25px;
+            transition: width 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 18px;
+            position: relative;
+            overflow: hidden;
+            background-size: 200% 100%;
+            animation: shimmer 2.5s infinite;
+        }
+
+        .progress-bar.royal {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 50%, #667eea 100%);
+            box-shadow: 0 0 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .progress-bar.gold {
+            background: linear-gradient(90deg, #f7971e 0%, #ffd200 50%, #f7971e 100%);
+            box-shadow: 0 0 25px rgba(255, 210, 0, 0.6);
+        }
+
+        .progress-bar.emerald {
+            background: linear-gradient(90deg, #11998e 0%, #38ef7d 50%, #11998e 100%);
+            box-shadow: 0 0 25px rgba(56, 239, 125, 0.6);
+        }
+
+        .progress-bar.sunset {
+            background: linear-gradient(90deg, #fa709a 0%, #fee140 50%, #fa709a 100%);
+            box-shadow: 0 0 25px rgba(254, 225, 64, 0.6);
+        }
+
+        .progress-bar.ocean {
+            background: linear-gradient(90deg, #2e3192 0%, #1bffff 50%, #2e3192 100%);
+            box-shadow: 0 0 25px rgba(27, 255, 255, 0.6);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
+        }
+
+        .progress-text {
+            color: white;
+            font-weight: 900;
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            z-index: 1;
+        }
+
+        .progress-glow {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 60px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
+            animation: glow-move 1.8s ease-in-out infinite;
+        }
+
+        @keyframes glow-move {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .values {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border: 2px solid #dee2e6;
+        }
+
+        .value-item {
+            text-align: center;
+        }
+
+        .value-label {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .value-amount {
+            font-weight: 900;
+            font-size: 24px;
+            color: #2c3e50;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .breakdown {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(0,0,0,0.03);
+            border-radius: 12px;
+        }
+
+        .breakdown-item {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+        }
+
+        .breakdown-label {
+            font-size: 11px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .breakdown-value {
+            font-size: 20px;
+            font-weight: 800;
+            color: #2c3e50;
+        }
+
+        /* ====================== PISCINA DE DINHEIRO MELHORADA ====================== */
+        .pool-scene {
+            height: 380px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            position: relative;
+            perspective: 1400px;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .pool-container {
+            width: 350px;
+            height: 280px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(15deg);
+            animation: pool-float 4s ease-in-out infinite;
+        }
+
+        @keyframes pool-float {
+            0%, 100% { transform: rotateX(15deg) translateY(0px); }
+            50% { transform: rotateX(15deg) translateY(-10px); }
+        }
+
+        .pool-body {
+            width: 350px;
+            height: 280px;
+            background: linear-gradient(145deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+            border-radius: 30px 30px 15px 15px;
+            position: relative;
+            border: 6px solid #1976d2;
+            overflow: hidden;
+            box-shadow: 
+                0 40px 80px rgba(25, 118, 210, 0.4),
+                inset 0 0 60px rgba(255,255,255,0.3),
+                inset 0 -10px 30px rgba(25, 118, 210, 0.2);
+        }
+
+        /* Azulejos da piscina melhorados */
+        .pool-tiles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent 0px, transparent 33px, rgba(25, 118, 210, 0.15) 33px, rgba(25, 118, 210, 0.15) 35px),
+                repeating-linear-gradient(90deg, transparent 0px, transparent 33px, rgba(25, 118, 210, 0.15) 33px, rgba(25, 118, 210, 0.15) 35px);
+        }
+
+        .pool-tiles::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 60%);
+        }
+
+        /* Borda decorativa melhorada */
+        .pool-edge {
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            height: 16px;
+            background: linear-gradient(90deg, #1565c0 0%, #1976d2 50%, #1565c0 100%);
+            border-radius: 30px 30px 0 0;
+            box-shadow: 
+                0 4px 10px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.3);
+        }
+
+        /* Escada da piscina melhorada */
+        .pool-ladder {
+            position: absolute;
+            right: 20px;
+            top: 0;
+            width: 35px;
+            height: 100%;
+            z-index: 10;
+        }
+
+        .ladder-rail {
+            position: absolute;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, #9e9e9e 0%, #757575 50%, #616161 100%);
+            border-radius: 4px;
+            box-shadow: 
+                0 3px 8px rgba(0,0,0,0.4),
+                inset -1px -1px 3px rgba(0,0,0,0.3),
+                inset 1px 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .ladder-rail:first-of-type { left: 0; }
+        .ladder-rail:last-of-type { right: 0; }
+
+        .ladder-step {
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #9e9e9e 0%, #757575 50%, #9e9e9e 100%);
+            border-radius: 4px;
+            box-shadow: 
+                0 3px 8px rgba(0,0,0,0.4),
+                inset 0 -1px 3px rgba(0,0,0,0.3),
+                inset 0 1px 2px rgba(255,255,255,0.3);
+        }
+
+        .ladder-step:nth-of-type(3) { top: 15%; }
+        .ladder-step:nth-of-type(4) { top: 35%; }
+        .ladder-step:nth-of-type(5) { top: 55%; }
+        .ladder-step:nth-of-type(6) { top: 75%; }
+
+        /* Dinheiro enchendo a piscina - Versão melhorada */
+        .money-water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, 
+                rgba(244, 208, 63, 0.9) 0%, 
+                rgba(243, 156, 18, 0.95) 30%,
+                rgba(214, 137, 16, 1) 70%,
+                #d68910 100%);
+            transition: height 1.2s cubic-bezier(0.65, 0, 0.35, 1);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Efeito de ondas no dinheiro */
+        .money-waves {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.3), 
+                transparent);
+            animation: wave-move 3s linear infinite;
+        }
+
+        @keyframes wave-move {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Notas de dinheiro flutuando - Versão melhorada */
+        .money-bills {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bill {
+            position: absolute;
+            width: 50px;
+            height: 25px;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            border-radius: 3px;
+            border: 2px solid #1e8449;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            animation: bill-float 6s ease-in-out infinite;
+        }
+
+        .bill::before {
+            content: '$';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 16px;
+            font-weight: 900;
+            color: #f4d03f;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .bill:nth-child(1) { left: 10%; bottom: 30%; animation-delay: 0s; }
+        .bill:nth-child(2) { left: 30%; bottom: 50%; animation-delay: 1s; }
+        .bill:nth-child(3) { left: 50%; bottom: 20%; animation-delay: 2s; }
+        .bill:nth-child(4) { left: 70%; bottom: 40%; animation-delay: 1.5s; }
+        .bill:nth-child(5) { left: 85%; bottom: 60%; animation-delay: 0.5s; }
+
+        @keyframes bill-float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(5deg); }
+            50% { transform: translateY(0px) rotate(0deg); }
+            75% { transform: translateY(-10px) rotate(-5deg); }
+        }
+
+        /* Moedas de ouro - Versão melhorada */
+        .money-coins {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .coin {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #f4d03f, #d68910);
+            box-shadow: 
+                0 2px 5px rgba(0,0,0,0.3),
+                inset -2px -2px 5px rgba(0,0,0,0.2),
+                inset 2px 2px 5px rgba(255,255,255,0.5);
+            animation: coin-spin 8s linear infinite;
+        }
+
+        .coin::before {
+            content: 'R$';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8px;
+            font-weight: 900;
+            color: #7e5109;
+        }
+
+        .coin:nth-child(1) { left: 15%; bottom: 10%; animation-delay: 0s; }
+        .coin:nth-child(2) { left: 35%; bottom: 25%; animation-delay: 1s; }
+        .coin:nth-child(3) { left: 55%; bottom: 15%; animation-delay: 2s; }
+        .coin:nth-child(4) { left: 75%; bottom: 30%; animation-delay: 3s; }
+        .coin:nth-child(5) { left: 25%; bottom: 45%; animation-delay: 4s; }
+        .coin:nth-child(6) { left: 45%; bottom: 35%; animation-delay: 5s; }
+        .coin:nth-child(7) { left: 65%; bottom: 50%; animation-delay: 6s; }
+        .coin:nth-child(8) { left: 85%; bottom: 40%; animation-delay: 7s; }
+
+        @keyframes coin-spin {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* Diamantes de luxo */
+        .money-diamonds {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .diamond {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: linear-gradient(135deg, #e0f7fa 0%, #80deea 50%, #4dd0e1 100%);
+            transform: rotate(45deg);
+            box-shadow: 
+                0 0 10px rgba(77, 208, 225, 0.7),
+                inset 0 0 5px rgba(255,255,255,0.8);
+            animation: diamond-sparkle 4s ease-in-out infinite;
+        }
+
+        .diamond:nth-child(1) { left: 20%; bottom: 20%; animation-delay: 0s; }
+        .diamond:nth-child(2) { left: 40%; bottom: 35%; animation-delay: 1s; }
+        .diamond:nth-child(3) { left: 60%; bottom: 25%; animation-delay: 2s; }
+        .diamond:nth-child(4) { left: 80%; bottom: 40%; animation-delay: 3s; }
+
+        @keyframes diamond-sparkle {
+            0%, 100% { 
+                opacity: 0.7; 
+                transform: rotate(45deg) scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: rotate(45deg) scale(1.2);
+            }
+        }
+
+        /* Superfície do líquido melhorada */
+        .money-surface {
+            position: absolute;
+            top: -5px;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.4) 0%, 
+                rgba(255,255,255,0.6) 50%, 
+                rgba(255,255,255,0.4) 100%);
+            animation: surface-ripple 3s ease-in-out infinite;
+            border-radius: 50%;
+        }
+
+        @keyframes surface-ripple {
+            0%, 100% { transform: scaleX(1) translateY(0); }
+            50% { transform: scaleX(1.05) translateY(-3px); }
+        }
+
+        /* Brilho no dinheiro melhorado */
+        .money-shine {
+            position: absolute;
+            top: -100%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(135deg, 
+                transparent 0%, 
+                rgba(255,255,255,0.3) 45%, 
+                rgba(255,255,255,0.5) 50%, 
+                rgba(255,255,255,0.3) 55%, 
+                transparent 100%);
+            animation: money-shine-move 5s infinite;
+        }
+
+        @keyframes money-shine-move {
+            0% { transform: translate(-100%, -100%); }
+            100% { transform: translate(100%, 100%); }
+        }
+
+        /* Reflexo dourado melhorado */
+        .money-glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center top, 
+                rgba(244, 208, 63, 0.5) 0%, 
+                rgba(243, 156, 18, 0.3) 40%, 
+                transparent 70%);
+            animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Partículas de dinheiro flutuando */
+        .money-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #f4d03f 0%, #d68910 100%);
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: particle-float 10s linear infinite;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 8s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 1s; animation-duration: 9s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 2s; animation-duration: 10s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 3s; animation-duration: 11s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 4s; animation-duration: 12s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 8s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 6s; animation-duration: 9s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 7s; animation-duration: 10s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 8s; animation-duration: 11s; }
+
+        @keyframes particle-float {
+            0% { 
+                transform: translateY(100px) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% { 
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0;
+            }
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-size: 15px;
+            font-weight: 800;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .status-success {
+            background: linear-gradient(135deg, #d4edda 0%, #b8e0c5 100%);
+            color: #155724;
+            border: 3px solid #28a745;
+        }
+
+        .status-warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            color: #856404;
+            border: 3px solid #ffc107;
+        }
+
+        .status-danger {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border: 3px solid #dc3545;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .palette-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <h1>💰 Piscina de Dinheiro 💰</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <p style="font-size: 16px; color: #666; font-weight: 600;">Escolha a paleta de cores para seus cards:</p>
+            </div>
+
+            <div class="palette-selector">
+                <button class="palette-btn palette-royal active" onclick="changePalette('royal')">
+                    👑 Royal Purple
+                </button>
+                <button class="palette-btn palette-gold" onclick="changePalette('gold')">
+                    🌟 Golden Hour
+                </button>
+                <button class="palette-btn palette-emerald" onclick="changePalette('emerald')">
+                    💎 Emerald Dream
+                </button>
+                <button class="palette-btn palette-sunset" onclick="changePalette('sunset')">
+                    🌅 Sunset Vibes
+                </button>
+                <button class="palette-btn palette-ocean" onclick="changePalette('ocean')">
+                    🌊 Ocean Blue
+                </button>
+            </div>
+
+            <div class="input-grid">
+                <div class="input-group">
+                    <h3>👤 Crédito PF Total</h3>
+                    <div class="input-row">
+                        <label>Meta Total PF (R$)</label>
+                        <input type="number" id="meta-pf" value="180000" oninput="updateDashboard()">
+                    </div>
+                    
+                    <div class="input-subgroup">
+                        <h4>💳 Consignado</h4>
+                        <div class="input-row">
+                            <label>Realizado (R$)</label>
+                            <input type="number" id="realizado-consignado" value="75000" oninput="updateDashboard()">
+                        </div>
+                    </div>
+
+                    <div class="input-subgroup">
+                        <h4>💰 Não Consignado</h4>
+                        <div class="input-row">
+                            <label>Realizado (R$)</label>
+                            <input type="number" id="realizado-nao-consignado" value="92000" oninput="updateDashboard()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <h3>🏢 Crédito PJ</h3>
+                    <div class="input-row">
+                        <label>Meta (R$)</label>
+                        <input type="number" id="meta-pj" value="150000" oninput="updateDashboard()">
+                    </div>
+                    <div class="input-row">
+                        <label>Realizado (R$)</label>
+                        <input type="number" id="realizado-pj" value="135000" oninput="updateDashboard()">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="card royal" id="card-pf">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>👤</span>
+                            <span>Crédito PF</span>
+                        </div>
+                        <button class="export-btn" onclick="exportCard('card-pf', 'Credito_PF')">📸 Exportar</button>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar royal" id="progress-pf" style="width: 92.8%;">
+                            <div class="progress-glow"></div>
+                            <span class="progress-text">92.8%</span>
+                        </div>
+                    </div>
+
+                    <div class="values">
+                        <div class="value-item">
+                            <div class="value-label">Meta PF</div>
+                            <div class="value-amount" id="meta-display-pf">R$ 180.000</div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-label">Realizado Total</div>
+                            <div class="value-amount" id="realizado-total-pf">R$ 167.000</div>
+                        </div>
+                    </div>
+
+                    <div class="breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">💳 Consignado</div>
+                            <div class="breakdown-value" id="breakdown-consignado">R$ 75.000</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">💰 Não Consignado</div>
+                            <div class="breakdown-value" id="breakdown-nao-consignado">R$ 92.000</div>
+                        </div>
+                    </div>
+
+                    <div class="pool-scene">
+                        <div class="pool-container">
+                            <div class="pool-body">
+                                <div class="pool-edge"></div>
+                                <div class="pool-tiles"></div>
+                                <div class="pool-ladder">
+                                    <div class="ladder-rail"></div>
+                                    <div class="ladder-rail"></div>
+                                    <div class="ladder-step"></div>
+                                    <div class="ladder-step"></div>
+                                    <div class="ladder-step"></div>
+                                    <div class="ladder-step"></div>
+                                </div>
+                                <div class="money-water" id="money-pf" style="height: 92.8%;">
+                                    <div class="money-waves"></div>
+                                    <div class="money-particles">
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                    </div>
+                                    <div class="money-coins">
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                    </div>
+                                    <div class="money-bills">
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                    </div>
+                                    <div class="money-diamonds">
+                                        <div class="diamond"></div>
+                                        <div class="diamond"></div>
+                                        <div class="diamond"></div>
+                                        <div class="diamond"></div>
+                                    </div>
+                                    <div class="money-surface"></div>
+                                    <div class="money-shine"></div>
+                                    <div class="money-glow"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <span class="status-badge status-warning" id="status-pf">Quase Lá! 💪</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card royal" id="card-pj">
+                <div class="card-inner">
+                    <div class="card-header">
+                        <div class="card-title">
+                            <span>🏢</span>
+                            <span>Crédito PJ</span>
+                        </div>
+                        <button class="export-btn" onclick="exportCard('card-pj', 'Credito_PJ')">📸 Exportar</button>
+                    </div>
+
+                    <div class="progress-bar-container">
+                        <div class="progress-bar royal" id="progress-pj" style="width: 90%;">
+                            <div class="progress-glow"></div>
+                            <span class="progress-text">90%</span>
+                        </div>
+                    </div>
+
+                    <div class="values">
+                        <div class="value-item">
+                            <div class="value-label">Meta</div>
+                            <div class="value-amount" id="meta-display-pj">R$ 150.000</div>
+                        </div>
+                        <div class="value-item">
+                            <div class="value-label">Realizado</div>
+                            <div class="value-amount" id="realizado-display-pj">R$ 135.000</div>
+                        </div>
+                    </div>
+
+                    <div class="pool-scene">
+                        <div class="pool-container">
+                            <div class="pool-body">
+                                <div class="pool-edge"></div>
+                                <div class="pool-tiles"></div>
+                                <div class="pool-ladder">
+                                    <div class="ladder-rail"></div>
+                                    <div class="ladder-rail"></div>
+                                    <div class="ladder-step"></div>
+                                    <div class="ladder-step"></div>
+                                    <div class="ladder-step"></div>
+                                    <div class="ladder-step"></div>
+                                </div>
+                                <div class="money-water" id="money-pj" style="height: 90%;">
+                                    <div class="money-waves"></div>
+                                    <div class="money-particles">
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                        <div class="particle"></div>
+                                    </div>
+                                    <div class="money-coins">
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                        <div class="coin"></div>
+                                    </div>
+                                    <div class="money-bills">
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                        <div class="bill"></div>
+                                    </div>
+                                    <div class="money-diamonds">
+                                        <div class="diamond"></div>
+                                        <div class="diamond"></div>
+                                        <div class="diamond"></div>
+                                        <div class="diamond"></div>
+                                    </div>
+                                    <div class="money-surface"></div>
+                                    <div class="money-shine"></div>
+                                    <div class="money-glow"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <span class="status-badge status-warning" id="status-pj">Quase Lá! 💪</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPalette = 'royal';
+
+        function changePalette(palette) {
+            currentPalette = palette;
+            
+            document.querySelectorAll('.palette-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.palette-btn.palette-${palette}`).classList.add('active');
+            
+            document.querySelectorAll('.card').forEach(card => {
+                card.className = `card ${palette}`;
+            });
+            
+            document.querySelectorAll('.progress-bar').forEach(bar => {
+                bar.className = `progress-bar ${palette}`;
+            });
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+                minimumFractionDigits: 0
+            }).format(value);
+        }
+
+        function getStatusBadge(percentage) {
+            if (percentage >= 100) return { class: 'status-success', text: 'Meta Alcançada! 🎉' };
+            if (percentage >= 80) return { class: 'status-warning', text: 'Quase Lá! 💪' };
+            return { class: 'status-danger', text: 'Em Progresso 🚀' };
+        }
+
+        function updatePF() {
+            const metaPF = parseFloat(document.getElementById('meta-pf').value) || 0;
+            const realizadoConsignado = parseFloat(document.getElementById('realizado-consignado').value) || 0;
+            const realizadoNaoConsignado = parseFloat(document.getElementById('realizado-nao-consignado').value) || 0;
+            const realizadoTotal = realizadoConsignado + realizadoNaoConsignado;
+            const percentage = metaPF > 0 ? (realizadoTotal / metaPF * 100) : 0;
+
+            // Atualizar barra de progresso
+            const progressBar = document.getElementById('progress-pf');
+            const progressWidth = Math.min(percentage, 100);
+            progressBar.style.width = `${progressWidth}%`;
+            progressBar.querySelector('.progress-text').textContent = `${percentage.toFixed(1)}%`;
+
+            // Atualizar valores
+            document.getElementById('meta-display-pf').textContent = formatCurrency(metaPF);
+            document.getElementById('realizado-total-pf').textContent = formatCurrency(realizadoTotal);
+            document.getElementById('breakdown-consignado').textContent = formatCurrency(realizadoConsignado);
+            document.getElementById('breakdown-nao-consignado').textContent = formatCurrency(realizadoNaoConsignado);
+
+            // Atualizar status
+            const status = getStatusBadge(percentage);
+            const statusBadge = document.getElementById('status-pf');
+            statusBadge.className = `status-badge ${status.class}`;
+            statusBadge.textContent = status.text;
+
+            // Atualizar piscina
+            const moneyHeight = Math.min(percentage, 100);
+            document.getElementById('money-pf').style.height = `${moneyHeight}%`;
+        }
+
+        function updatePJ() {
+            const metaPJ = parseFloat(document.getElementById('meta-pj').value) || 0;
+            const realizadoPJ = parseFloat(document.getElementById('realizado-pj').value) || 0;
+            const percentage = metaPJ > 0 ? (realizadoPJ / metaPJ * 100) : 0;
+
+            // Atualizar barra de progresso
+            const progressBar = document.getElementById('progress-pj');
+            const progressWidth = Math.min(percentage, 100);
+            progressBar.style.width = `${progressWidth}%`;
+            progressBar.querySelector('.progress-text').textContent = `${percentage.toFixed(1)}%`;
+
+            // Atualizar valores
+            document.getElementById('meta-display-pj').textContent = formatCurrency(metaPJ);
+            document.getElementById('realizado-display-pj').textContent = formatCurrency(realizadoPJ);
+
+            // Atualizar status
+            const status = getStatusBadge(percentage);
+            const statusBadge = document.getElementById('status-pj');
+            statusBadge.className = `status-badge ${status.class}`;
+            statusBadge.textContent = status.text;
+
+            // Atualizar piscina
+            const moneyHeight = Math.min(percentage, 100);
+            document.getElementById('money-pj').style.height = `${moneyHeight}%`;
+        }
+
+        function updateDashboard() {
+            updatePF();
+            updatePJ();
+        }
+
+        function exportCard(cardId, fileName) {
+            const card = document.getElementById(cardId);
+            const button = card.querySelector('.export-btn');
+            button.style.display = 'none';
+
+            html2canvas(card, {
+                scale: 3,
+                backgroundColor: null,
+                logging: false,
+                windowWidth: card.scrollWidth,
+                windowHeight: card.scrollHeight
+            }).then(canvas => {
+                button.style.display = 'block';
+                
+                const link = document.createElement('a');
+                link.download = `${fileName}_${currentPalette}_${new Date().toISOString().split('T')[0]}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
+        // Inicializar dashboard
+        updateDashboard();
+    </script>
+</body>
+</html>
