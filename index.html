@@ -3,378 +3,302 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard de Metas - Tanque Fuel (index)</title>
+  <title>Dashboard de Metas - Tanque Fuel (Compacto 70% v2)</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{
       --bg1:#1e3c72; --bg2:#2a5298; --bg3:#7e22ce;
-      --glass:#fffffffa; --ink:#1a1a2e; --muted:#666; --card-shadow:0 25px 70px rgba(0,0,0,.3);
+      --glass:#fffffffa; --ink:#1a1a2e; --muted:#666; --card-shadow:0 14px 40px rgba(0,0,0,.22);
       --chip-bg:#eef2ff; --chip-text:#111827; --good:#28a745; --warn:#ffc107; --bad:#dc3545;
-      --scale:1.5;
     }
     body{
       font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
       background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 50%,var(--bg3) 100%);
-      min-height:100vh; padding:20px;
+      min-height:100vh; padding:14px;
     }
-    .scale-wrap{
-      transform:scale(var(--scale));
-      transform-origin: top center;
-      width:calc(100% / var(--scale));
-      margin:0 auto;
-    }
-
-    .container{max-width:1400px;margin:0 auto}
+    .container{max-width:980px;margin:0 auto}
     .controls{
       background:var(--glass); backdrop-filter:blur(10px);
-      padding:35px;border-radius:25px;box-shadow:var(--card-shadow);margin-bottom:40px;
+      padding:16px;border-radius:14px;box-shadow:var(--card-shadow);margin-bottom:18px;
     }
+    /* Título +20% (de 20px para 24px) */
     h1{
-      margin-bottom:30px;color:#1a1a2e;font-size:36px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:2px;
+      margin-bottom:8px;color:#1a1a2e;font-size:24px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:1.2px;
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
     }
-    .subnote{font-size:14px;color:#555;text-align:center;margin-top:6px}
-    h2 {
-        text-align: center;
-        color: #fff;
-        font-size: 28px;
-        font-weight: 700;
-        margin: 40px 0 20px;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    }
+    .subnote{font-size:11px;color:#eee;text-align:center;margin-top:2px}
 
-    .palette-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px}
+    .palette-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px;margin-bottom:8px}
     .palette-btn{
-      padding:18px;border:3px solid transparent;border-radius:15px;cursor:pointer;font-size:15px;font-weight:700;transition:.3s;position:relative;overflow:hidden;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3)
+      padding:8px 10px;border:2px solid transparent;border-radius:10px;cursor:pointer;font-size:12px;font-weight:700;transition:.25s;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3)
     }
-    .palette-btn::before{content:'';position:absolute;inset:0;left:-100%;background:rgba(255,255,255,.2);transition:left .4s}
-    .palette-btn:hover::before{left:100%}
-    .palette-btn.active{transform:scale(1.05);box-shadow:0 10px 30px rgba(0,0,0,.4);border-color:rgba(255,255,255,.8)}
+    .palette-btn.active{transform:scale(1.02);box-shadow:0 6px 16px rgba(0,0,0,.3);border-color:rgba(255,255,255,.8)}
     .palette-royal{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}
     .palette-gold{background:linear-gradient(135deg,#f7971e 0%,#ffd200 100%)}
     .palette-emerald{background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%)}
     .palette-sunset{background:linear-gradient(135deg,#fa709a 0%,#fee140 100%)}
     .palette-ocean{background:linear-gradient(135deg,#2e3192 0%,#1bffff 100%)}
 
-    .scheduler{
-      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px
-    }
-    .sched-item{display:flex;flex-direction:column;gap:6px}
-    .sched-item label{font-size:12px;color:#444;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-    .sched-item input{padding:12px;border:2px solid #ddd;border-radius:10px;font-size:16px;font-weight:600}
-    .note{font-size:12px;color:#666}
+    .scheduler{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:6px;margin-top:6px}
+    .sched-item{display:flex;flex-direction:column;gap:3px}
+    .sched-item label{font-size:9px;color:#333;font-weight:800;text-transform:uppercase;letter-spacing:.35px}
+    .sched-item input{padding:7px 9px;border:2px solid #ddd;border-radius:7px;font-size:13px;font-weight:600}
 
-    .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:25px;margin-top:20px}
-    .input-group{background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);padding:22px;border-radius:18px;border:3px solid #dee2e6;transition:.3s}
-    .input-group:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,.15)}
-    .input-group h3{margin-bottom:14px;color:#2c3e50;font-size:20px;text-transform:uppercase;letter-spacing:1.5px;font-weight:800}
-    .input-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-    label{font-size:13px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-    input[type=number]{padding:12px;border:3px solid #ddd;border-radius:10px;font-size:18px;font-weight:600;transition:.3s;background:#fff}
-    input:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 4px rgba(102,126,234,.15);transform:scale(1.02)}
-    .input-subgroup{background:#ffffffb3;padding:14px;border-radius:12px;margin-bottom:12px;border:2px dashed #adb5bd}
-    .input-subgroup h4{font-size:14px;color:#495057;margin-bottom:10px;font-weight:700}
+    .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-top:10px}
+    .input-group{background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);padding:12px;border-radius:12px;border:2px solid #dee2e6}
+    .input-group h3{margin-bottom:8px;color:#2c3e50;font-size:14px;text-transform:uppercase;letter-spacing:.9px;font-weight:800}
+    .input-row{display:flex;flex-direction:column;gap:5px;margin-bottom:6px}
+    label{font-size:10px;color:#555;font-weight:800;text-transform:uppercase;letter-spacing:.35px}
+    input[type=number]{padding:7px 9px;border:2px solid #ddd;border-radius:7px;font-size:13px;font-weight:700;background:#fff}
+    .input-subgroup{background:#ffffffb3;padding:8px;border-radius:9px;margin-bottom:6px;border:2px dashed #adb5bd}
+    .input-subgroup h4{font-size:11px;color:#495057;margin-bottom:5px;font-weight:800}
 
-    .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(520px,1fr));gap:35px}
+    /* ====== CARDS PRINCIPAIS ====== */
+    .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+    /* Remover pontas brancas: card transparente e conteúdo com o fundo branco e mesmo raio */
     .card{
-      border-radius:25px;padding:35px;box-shadow:var(--card-shadow);position:relative;overflow:hidden;transition:.3s; margin:20px;
-      background:#fff;
-      width:70%; justify-self:center;           /* CHANGE 1 */
-      border:12px solid transparent;            /* CHANGE 2 */
+      border-radius:14px;position:relative;overflow:hidden;transition:.25s;margin:6px;
+      background:transparent;border:6px solid transparent; /* sem fundo aqui */
     }
-    .card:hover{transform:translateY(-10px);box-shadow:0 35px 90px rgba(0,0,0,.4)}
+    .card:hover{transform:translateY(-3px);box-shadow:0 20px 48px rgba(0,0,0,.24)}
     .card.royal{border-color:#667eea}
     .card.gold{border-color:#f7971e}
     .card.emerald{border-color:#11998e}
     .card.sunset{border-color:#fa709a}
     .card.ocean{border-color:#2e3192}
 
-    .card-inner{border-radius:20px;padding:28px;position:relative;transition:background .3s;background:#fff}
-    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-    .card-title{font-size:30px;font-weight:900;color:#2c3e50;display:flex;align-items:center;gap:14px;text-transform:uppercase;letter-spacing:1.2px}
-    .export-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:800;transition:.3s;box-shadow:0 6px 20px rgba(102,126,234,.4);text-transform:uppercase;letter-spacing:.5px}
-    .export-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(102,126,234,.6)}
+    .card-inner{
+      border-radius:14px;padding:10px;background:#fff;box-shadow:var(--card-shadow);
+    }
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .card-title{font-size:15px;font-weight:900;color:#2c3e50;display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.7px}
+    .export-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:11px;font-weight:800;box-shadow:0 4px 12px rgba(102,126,234,.32)}
 
     .percent-chip{
-      display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border-radius:999px;
-      font-weight:900;letter-spacing:.5px;font-size:18px;margin-bottom:14px;
-      background:var(--chip-bg);color:var(--chip-text);border:3px solid #e5e7eb;
-      box-shadow:0 4px 12px rgba(0,0,0,.12);
+      display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;
+      font-weight:900;letter-spacing:.25px;font-size:11px;margin-bottom:6px;
+      background:var(--chip-bg);color:var(--chip-text);border:2px solid #e5e7eb;
     }
 
-    .progress-bar-container{width:100%;height:44px;background:linear-gradient(135deg,#e9ecef 0%,#dee2e6 100%);border-radius:25px;overflow:hidden;position:relative;margin:10px 0 14px;border:3px solid rgba(0,0,0,.05);box-shadow:inset 0 3px 8px rgba(0,0,0,.15)}
-    .progress-bar{height:100%;border-radius:25px;transition:width 1.2s cubic-bezier(.65,0,.35,1);display:flex;align-items:center;justify-content:flex-end;padding-right:18px;position:relative;overflow:hidden;background-size:200% 100%;animation:shimmer 2.5s infinite;background:linear-gradient(90deg,#667eea 0%,#764ba2 50%,#667eea 100%);box-shadow:0 0 25px rgba(102,126,234,.6)}
+    .progress-bar-container{width:100%;height:18px;background:linear-gradient(135deg,#e9ecef 0%,#dee2e6 100%);border-radius:14px;overflow:hidden;position:relative;margin:5px 0 6px;border:2px solid rgba(0,0,0,.05);box-shadow:inset 0 2px 5px rgba(0,0,0,.1)}
+    .progress-bar{height:100%;border-radius:14px;transition:width 1s cubic-bezier(.65,0,.35,1), background 0.4s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;position:relative;overflow:hidden;background-size:200% 100%;animation:shimmer 2.5s infinite}
     @keyframes shimmer{0%{background-position:0% 0%}50%{background-position:100% 0%}100%{background-position:0% 0%}}
-    .progress-text{color:#fff;font-weight:900;font-size:16px;text-shadow:0 2px 4px rgba(0,0,0,.3);z-index:1}
-    .progress-glow{position:absolute;right:0;top:0;bottom:0;width:60px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5));animation:glow-move 1.8s ease-in-out infinite}
+    .progress-text{color:#fff;font-weight:900;font-size:10px;text-shadow:0 2px 4px rgba(0,0,0,.3);z-index:1}
+    .progress-glow{position:absolute;right:0;top:0;bottom:0;width:30px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5));animation:glow-move 1.8s ease-in-out infinite}
     @keyframes glow-move{0%,100%{opacity:.4}50%{opacity:1}}
 
-    .values{display:flex;justify-content:space-around;margin:16px 0;padding:16px;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);border-radius:15px;border:2px solid #dee2e6}
+    .values{display:flex;justify-content:space-around;margin:8px 0;padding:8px;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);border-radius:8px;border:2px solid #dee2e6}
     .value-item{text-align:center}
-    .value-label{color:#666;font-size:13px;margin-bottom:6px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
-    .value-amount{font-weight:900;font-size:24px;color:#2c3e50;text-shadow:0 1px 2px rgba(0,0,0,.1)}
-    .breakdown{display:flex;gap:12px;margin:8px 0 6px;padding:12px;background:rgba(0,0,0,.03);border-radius:12px}
-    .breakdown-item{flex:1;text-align:center;padding:12px;background:#fff;border-radius:10px;border:2px solid #e9ecef}
-    .breakdown-label{font-size:11px;color:#6c757d;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:6px}
-    .breakdown-value{font-size:20px;font-weight:800;color:#2c3e50}
+    .value-label{color:#666;font-size:9px;margin-bottom:3px;text-transform:uppercase;letter-spacing:.9px;font-weight:800}
+    .value-amount{font-weight:900;font-size:14px;color:#2c3e50}
+
+    .breakdown{display:flex;gap:6px;margin:5px 0 4px;padding:6px;background:rgba(0,0,0,.03);border-radius:8px}
+    .breakdown-item{flex:1;text-align:center;padding:6px;background:#fff;border-radius:7px;border:2px solid #e9ecef}
+    .breakdown-label{font-size:9px;color:#6c757d;text-transform:uppercase;letter-spacing:.7px;font-weight:800;margin-bottom:3px}
+    .breakdown-value{font-size:14px;font-weight:900;color:#2c3e50}
 
     .percent-badge{
-      position:absolute;top:16px;right:16px;display:flex;align-items:center;justify-content:center;
-      width:110px;height:110px;border-radius:50%;background:#ffffffee;
-      box-shadow:0 12px 40px rgba(0,0,0,.25), inset 0 0 0 6px #ffffff;
-      font-weight:900;font-size:24px;color:#111827;text-shadow:0 1px 0 rgba(255,255,255,.6);border:3px solid #e5e7eb;
+      position:absolute;top:8px;right:8px;display:flex;align-items:center;justify-content:center;
+      width:50px;height:50px;border-radius:50%;background:#ffffffee;
+      box-shadow:0 8px 22px rgba(0,0,0,.2), inset 0 0 0 3px #ffffff;
+      font-weight:900;font-size:13px;color:#111827;border:2px solid #e5e7eb;
     }
-    .percent-badge small{display:block;font-size:11px;letter-spacing:.5px;color:#6b7280;margin-top:2px;font-weight:800}
+    .percent-badge small{display:block;font-size:8px;letter-spacing:.35px;color:#6b7280;margin-top:1px;font-weight:800}
 
-    .pacing{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:6px}
-    .pace{padding:10px;border-radius:10px;border:2px solid #e9ecef;background:#fff;text-align:center}
-    .pace .k{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.8px;font-weight:800}
-    .pace .v{font-size:18px;font-weight:900;color:#111;margin-top:4px}
+    .pacing{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:5px;margin-top:5px}
+    .pace{padding:6px;border-radius:7px;border:2px solid #e9ecef;background:#fff;text-align:center}
+    .pace .k{font-size:8.5px;color:#666;text-transform:uppercase;letter-spacing:.6px;font-weight:900}
+    .pace .v{font-size:12px;font-weight:900;color:#111;margin-top:2px}
     .pace.good .v{color:#0f9d58}
     .pace.bad .v{color:#c5221f}
 
-    .fuel-scene{height:360px;display:flex;align-items:center;justify-content:center;position:relative;padding:16px}
-    .fuel-container{position:relative;width:200px;height:300px;animation:fuel-float 4s ease-in-out infinite}
-    @keyframes fuel-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-10px)}}
+    /* ===== Tanque de combustível ===== */
+    .fuel-scene{height:154px;display:flex;align-items:center;justify-content:center;position:relative;padding:6px}
+    /* Wrapper para aumentar 10% sem mexer no layout do card */
+    .fuel-scale{transform:scale(1.1); transform-origin:center;}
+    .fuel-container{position:relative;width:84px;height:126px;animation:fuel-float 4s ease-in-out infinite}
+    @keyframes fuel-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-6px)}}
     .fuel-tank{
-      width:200px;height:300px;background:linear-gradient(145deg,#e2e8f0 0%,#cbd5e1 50%,#94a3b8 100%);
-      border-radius:20px;position:relative;border:5px solid #64748b;overflow:hidden;
-      box-shadow:0 30px 60px rgba(0,0,0,.4),inset 0 0 50px rgba(255,255,255,.2);
+      width:84px;height:126px;background:linear-gradient(145deg,#e2e8f0 0%,#cbd5e1 50%,#94a3b8 100%);
+      border-radius:10px;position:relative;border:3px solid #64748b;overflow:hidden;
+      box-shadow:0 14px 30px rgba(0,0,0,.3),inset 0 0 22px rgba(255,255,255,.2);
     }
     .fuel-label{
       position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-      font-size:32px;font-weight:900;color:#334155;letter-spacing:6px;z-index:10;
-      text-shadow:0 0 20px rgba(255,255,255,.9),0 2px 4px rgba(0,0,0,.3);
+      font-size:13px;font-weight:900;color:#334155;letter-spacing:3px;z-index:10;
+      text-shadow:0 0 10px rgba(255,255,255,.85),0 2px 3px rgba(0,0,0,.22);
     }
-    .fuel-frame{position:absolute;top:15px;left:15px;right:15px;bottom:15px;border:3px solid rgba(255,255,255,.3);border-radius:15px;box-shadow:inset 0 0 30px rgba(0,0,0,.15)}
-    .level-marks{position:absolute;left:12px;top:30px;bottom:30px;width:20px;display:flex;flex-direction:column;justify-content:space-between;z-index:5}
-    .level-mark{width:100%;height:3px;background:#1e293b;border-radius:2px;position:relative}
-    .level-mark::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:28px;height:3px;background:#1e293b;border-radius:2px}
-    .money-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(244,208,63,.95) 0%,rgba(243,156,18,1) 30%,rgba(214,137,16,1) 70%,#d68910 100%);transition:height 1.5s cubic-bezier(.4,0,.2,1);overflow:hidden;border-radius:0 0 20px 20px}
+    .fuel-frame{position:absolute;top:7px;left:7px;right:7px;bottom:7px;border:2px solid rgba(255,255,255,.28);border-radius:8px;box-shadow:inset 0 0 14px rgba(0,0,0,.15)}
+    .level-marks{position:absolute;left:6px;top:12px;bottom:12px;width:10px;display:flex;flex-direction:column;justify-content:space-between;z-index:5}
+    .level-mark{width:100%;height:2px;background:#1e293b;border-radius:2px;position:relative}
+    .level-mark::after{content:'';position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:14px;height:2px;background:#1e293b;border-radius:2px}
+    .money-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(244,208,63,.95) 0%,rgba(243,156,18,1) 30%,rgba(214,137,16,1) 70%,#d68910 100%);transition:height 1.1s cubic-bezier(.4,0,.2,1);overflow:hidden;border-radius:0 0 10px 10px}
     .coins-layer{position:absolute;width:100%;height:100%;
       background-image:
-      radial-gradient(circle at 15% 88%,#f4d03f 0%,transparent 8%),
-      radial-gradient(circle at 30% 82%,#f39c12 0%,transparent 8%),
-      radial-gradient(circle at 45% 90%,#f4d03f 0%,transparent 8%),
-      radial-gradient(circle at 60% 85%,#f39c12 0%,transparent 8%),
-      radial-gradient(circle at 75% 87%,#f4d03f 0%,transparent 8%),
-      radial-gradient(circle at 88% 83%,#f39c12 0%,transparent 8%),
-      radial-gradient(circle at 12% 68%,#f39c12 0%,transparent 7%),
-      radial-gradient(circle at 35% 65%,#f4d03f 0%,transparent 7%),
-      radial-gradient(circle at 55% 70%,#f39c12 0%,transparent 7%),
-      radial-gradient(circle at 72% 67%,#f4d03f 0%,transparent 7%),
-      radial-gradient(circle at 90% 65%,#f39c12 0%,transparent 7%),
-      radial-gradient(circle at 18% 48%,#f4d03f 0%,transparent 6.5%),
-      radial-gradient(circle at 40% 45%,#f39c12 0%,transparent 6.5%),
-      radial-gradient(circle at 62% 50%,#f4d03f 0%,transparent 6.5%),
-      radial-gradient(circle at 82% 47%,#f39c12 0%,transparent 6.5%),
-      radial-gradient(circle at 25% 28%,#f39c12 0%,transparent 6%),
-      radial-gradient(circle at 48% 25%,#f4d03f 0%,transparent 6%),
-      radial-gradient(circle at 70% 30%,#f39c12 0%,transparent 6%),
-      radial-gradient(circle at 85% 27%,#f39c12 0%,transparent 6%)
+      radial-gradient(circle at 20% 80%,#f4d03f 0%,transparent 5%),
+      radial-gradient(circle at 40% 70%,#f39c12 0%,transparent 5%),
+      radial-gradient(circle at 60% 85%,#f4d03f 0%,transparent 5%),
+      radial-gradient(circle at 80% 78%,#f39c12 0%,transparent 5%);
     }
     .bills-layer{position:absolute;width:100%;height:100%}
-    .bill{position:absolute;width:50px;height:25px;border-radius:3px;background:linear-gradient(135deg,#27ae60 0%,#229954 100%);border:2px solid #1e8449;box-shadow:0 3px 8px rgba(0,0,0,.35);animation:bill-float 6s ease-in-out infinite}
-    .bill::before{content:'$';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:900;color:#f4d03f;text-shadow:0 1px 2px rgba(0,0,0,.3)}
-    .bill:nth-child(1){left:15%;bottom:35%;animation-delay:0s}
-    .bill:nth-child(2){left:40%;bottom:55%;animation-delay:1.2s}
-    .bill:nth-child(3){left:65%;bottom:25%;animation-delay:.6s}
-    .bill:nth-child(4){left:80%;bottom:45%;animation-delay:1.8s}
-    @keyframes bill-float{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-8px) rotate(4deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-8px) rotate(-4deg)}}
+    .bill{position:absolute;width:24px;height:12px;border-radius:2px;background:linear-gradient(135deg,#27ae60 0%,#229954 100%);border:2px solid #1e8449;box-shadow:0 2px 5px rgba(0,0,0,.28);animation:bill-float 6s ease-in-out infinite}
+    .bill::before{content:'$';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:9px;font-weight:900;color:#f4d03f;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+    .bill:nth-child(1){left:15%;bottom:30%;animation-delay:0s}
+    .bill:nth-child(2){left:40%;bottom:50%;animation-delay:1.2s}
+    .bill:nth-child(3){left:65%;bottom:22%;animation-delay:.6s}
+    .bill:nth-child(4){left:80%;bottom:42%;animation-delay:1.8s}
+    @keyframes bill-float{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-4px) rotate(4deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-4px) rotate(-4deg)}}
 
-    .money-surface{position:absolute;top:-5px;left:0;right:0;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.35) 100%);border-radius:50%;animation:surface-ripple 3s ease-in-out infinite}
-    @keyframes surface-ripple{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(1.05) translateY(-3px)}}
+    .money-surface{position:absolute;top:-3px;left:0;right:0;height:6px;background:linear-gradient(90deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.35) 100%);border-radius:50%;animation:surface-ripple 3s ease-in-out infinite}
+    @keyframes surface-ripple{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(1.05) translateY(-2px)}}
     .money-shine{position:absolute;top:-120%;left:-60%;width:220%;height:220%;background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,.25) 46%,rgba(255,255,255,.45) 50%,rgba(255,255,255,.25) 54%,transparent 100%);animation:shine-move 5s infinite}
     @keyframes shine-move{0%{transform:translate(-100%,-100%)}100%{transform:translate(120%,120%)}}
-    .money-glow{position:absolute;width:100%;height:100%;background:radial-gradient(ellipse at center bottom,rgba(244,208,63,.6) 0%,rgba(243,156,18,.35) 50%,transparent 80%);animation:glow-pulse 3.5s ease-in-out infinite}
+    .money-glow{position:absolute;width:100%;height:100%;background:radial-gradient(ellipse at center bottom,rgba(244,208,63,.5) 0%,rgba(243,156,18,.32) 50%,transparent 80%);animation:glow-pulse 3s ease-in-out infinite}
     @keyframes glow-pulse{0%,100%{opacity:.7}50%{opacity:1}}
 
-    .status-badge{display:inline-block;padding:12px 28px;border-radius:30px;font-size:15px;font-weight:800;margin-top:10px;text-transform:uppercase;letter-spacing:1.5px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
-    .status-success{background:linear-gradient(135deg,#d4edda 0%,#b8e0c5 100%);color:#155724;border:3px solid #28a745}
-    .status-warning{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);color:#856404;border:3px solid #ffc107}
-    .status-danger{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24;border:3px solid #dc3545}
+    .status-badge{display:inline-block;padding:6px 10px;border-radius:16px;font-size:11px;font-weight:800;margin-top:6px;text-transform:uppercase;letter-spacing:.9px;box-shadow:0 6px 14px rgba(0,0,0,.18)}
+    .status-success{background:linear-gradient(135deg,#d4edda 0%,#b8e0c5 100%);color:#155724;border:2px solid #28a745}
+    .status-warning{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);color:#856404;border:2px solid #ffc107}
+    .status-danger{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24;border:2px solid #dc3545}
 
     @media (max-width:768px){
-      .scale-wrap{transform:scale(1.3); width:calc(100% / 1.3);}
       .dashboard{grid-template-columns:1fr}
-      .palette-selector{grid-template-columns:1fr}
-      .input-grid{grid-template-columns:1fr}
-      .percent-badge{width:96px;height:96px;font-size:20px}
-      .card{width:90%;}
+      .percent-badge{width:46px;height:46px;font-size:12px}
+      .progress-bar-container{height:16px}
+      .fuel-scene{height:146px}
+      /* manter escala 1.1 no mobile */
     }
-
-    .condensed-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; margin-top: 20px; }
-    .card-condensed {
-        background: #ffffff;
-        border-radius: 16px;
-        padding: 20px 25px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        width:70%; justify-self:center;   /* CHANGE 1 */
-        border:12px solid;                /* CHANGE 2 */
-        position: relative;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card-condensed:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); }
-    .card-condensed.royal { border-color: #667eea; }
-    .card-condensed.gold { border-color: #f7971e; }
-    .card-condensed.emerald { border-color: #11998e; }
-    .card-condensed.sunset { border-color: #fa709a; }
-    .card-condensed.ocean { border-color: #2e3192; }
-
-    .card-condensed .card-header { margin-bottom: 15px; }
-    .card-condensed .card-title { font-size: 40px; color: #2c3e50; margin: 0; }
-    .card-condensed .export-btn { padding: 10px 18px; font-size: 12px; }
-
-    .card-condensed .percent-badge { width: 90px; height: 90px; font-size: 22px; top: -15px; right: -15px; border: 4px solid #fff; }
-
-    .card-condensed .progress-bar-container { height: 50px; margin: 15px 0; border-radius: 30px; }
-    .card-condensed .progress-bar { border-radius: 30px; }
-    .card-condensed .progress-text { font-size: 18px; }
-
-    .card-condensed .values { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e9ecef; }
-    .card-condensed .value-label { font-size: 14px; }
-    .card-condensed .value-amount { font-size: 32px; }
-
-    .card-condensed .breakdown { margin: 10px 0; padding: 10px; background: #ffffff; border: 1px solid #e9ecef; }
-    .card-condensed .breakdown-label { font-size: 12px; }
-    .card-condensed .breakdown-value { font-size: 24px; }
-
-    .card-condensed .pacing { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e9ecef; }
-    .card-condensed .pace { background: transparent; border: none; padding: 5px; text-align: center; flex: 1; }
-    .card-condensed .pace .k { font-size: 10px; color: #6c757d; }
-    .card-condensed .pace .v { font-size: 22px; margin-top: 2px; }
-    .card-condensed .pace:not(:last-child) { border-right: 1px solid #dee2e6; }
-
-    .card-condensed .status-badge { font-size: 14px; padding: 10px 20px; margin-top: 15px; width: 100%; text-align: center; }
   </style>
 </head>
 <body>
-  <div class="scale-wrap">
-    <div class="container">
-      <div class="controls">
-        <h1>⛽ Tanque Fuel</h1>
-        <p class="subnote">Cards 30% mais curtos (largura) e bordas temáticas 3× mais espessas.</p>
+  <div class="container">
+    <div class="controls">
+      <h1>⛽ Tanque Fuel</h1>
+      <p class="subnote">Barra dinâmica por atingimento, tanque +10% sem aumentar o card e sem pontas brancas nas bordas.</p>
 
-        <div class="palette-selector" style="margin-top:12px">
-          <button class="palette-btn palette-royal active" onclick="changePalette('royal')">👑 Royal Purple</button>
-          <button class="palette-btn palette-gold"   onclick="changePalette('gold')">🌟 Golden Hour</button>
-          <button class="palette-btn palette-emerald"onclick="changePalette('emerald')">💎 Emerald Dream</button>
-          <button class="palette-btn palette-sunset" onclick="changePalette('sunset')">🌅 Sunset Vibes</button>
-          <button class="palette-btn palette-ocean"  onclick="changePalette('ocean')">🌊 Ocean Blue</button>
+      <div class="palette-selector" style="margin-top:6px">
+        <button class="palette-btn palette-royal active" onclick="changePalette('royal')">👑 Royal Purple</button>
+        <button class="palette-btn palette-gold"   onclick="changePalette('gold')">🌟 Golden Hour</button>
+        <button class="palette-btn palette-emerald"onclick="changePalette('emerald')">💎 Emerald Dream</button>
+        <button class="palette-btn palette-sunset" onclick="changePalette('sunset')">🌅 Sunset Vibes</button>
+        <button class="palette-btn palette-ocean"  onclick="changePalette('ocean')">🌊 Ocean Blue</button>
+      </div>
+
+      <div class="scheduler">
+        <div class="sched-item">
+          <label for="start-time">Início do dia</label>
+          <input type="time" id="start-time" value="09:00">
+        </div>
+        <div class="sched-item">
+          <label for="end-time">Fim do dia</label>
+          <input type="time" id="end-time" value="18:00">
+        </div>
+        <div class="sched-item">
+          <label>Hora atual</label>
+          <input type="text" id="now-display" value="--:--" disabled>
+        </div>
+        <div class="sched-item">
+          <label>&nbsp;</label>
+          <button class="export-btn" onclick="exportAll()">📦 Exportar Tudo</button>
+          <div class="note" style="font-size:10px;color:#444">Exporta PF e PJ.</div>
+        </div>
+      </div>
+
+      <div class="input-grid">
+        <div class="input-group">
+          <h3>👤 Crédito PF Total</h3>
+          <div class="input-row">
+            <label>Meta Total PF (R$)</label>
+            <input type="number" id="meta-pf" value="180000">
+          </div>
+          <div class="input-subgroup">
+            <h4>💳 Consignado</h4>
+            <div class="input-row">
+              <label>Realizado (R$)</label>
+              <input type="number" id="realizado-consignado" value="75000">
+            </div>
+          </div>
+          <div class="input-subgroup">
+            <h4>💰 Não Consignado</h4>
+            <div class="input-row">
+              <label>Realizado (R$)</label>
+              <input type="number" id="realizado-nao-consignado" value="92000">
+            </div>
+          </div>
         </div>
 
-        <div class="scheduler">
-          <div class="sched-item">
-            <label for="start-time">Início do dia</label>
-            <input type="time" id="start-time" value="09:00">
+        <div class="input-group">
+          <h3>🏢 Crédito PJ</h3>
+          <div class="input-row">
+            <label>Meta PJ (R$)</label>
+            <input type="number" id="meta-pj" value="150000">
           </div>
-          <div class="sched-item">
-            <label for="end-time">Fim do dia</label>
-            <input type="time" id="end-time" value="18:00">
-          </div>
-          <div class="sched-item">
-            <label>Hora atual</label>
-            <input type="text" id="now-display" value="--:--" disabled>
-          </div>
-          <div class="sched-item">
-            <label>&nbsp;</label>
-            <button class="export-btn" onclick="exportAll()">📦 Exportar Tudo</button>
-            <div class="note">Exporta todos os cards.</div>
-          </div>
-        </div>
-
-        <div class="input-grid">
-          <div class="input-group">
-            <h3>👤 Crédito PF Total</h3>
+          <div class="input-subgroup">
+            <h4>📈 Desembolso Giro</h4>
             <div class="input-row">
-              <label>Meta Total PF (R$)</label>
-              <input type="number" id="meta-pf" value="180000">
-            </div>
-            <div class="input-subgroup">
-              <h4>💳 Consignado</h4>
-              <div class="input-row">
-                <label>Realizado (R$)</label>
-                <input type="number" id="realizado-consignado" value="75000">
-              </div>
-            </div>
-            <div class="input-subgroup">
-              <h4>💰 Não Consignado</h4>
-              <div class="input-row">
-                <label>Realizado (R$)</label>
-                <input type="number" id="realizado-nao-consignado" value="92000">
-              </div>
+              <label>Realizado (R$)</label>
+              <input type="number" id="desembolso-giro" value="80000">
             </div>
           </div>
-
-          <div class="input-group">
-            <h3>🏢 Crédito PJ</h3>
+          <div class="input-subgroup">
+            <h4>📊 Desembolso Recebíveis</h4>
             <div class="input-row">
-              <label>Meta PJ (R$)</label>
-              <input type="number" id="meta-pj" value="150000">
-            </div>
-            <div class="input-subgroup">
-              <h4>📈 Desembolso Giro</h4>
-              <div class="input-row">
-                <label>Realizado (R$)</label>
-                <input type="number" id="desembolso-giro" value="80000">
-              </div>
-            </div>
-            <div class="input-subgroup">
-              <h4>📊 Desembolso Recebíveis</h4>
-              <div class="input-row">
-                <label>Realizado (R$)</label>
-                <input type="number" id="desembolso-recebiveis" value="55000">
-              </div>
+              <label>Realizado (R$)</label>
+              <input type="number" id="desembolso-recebiveis" value="55000">
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="dashboard">
-        <div class="card royal" id="card-pf">
-          <div class="percent-badge" id="badge-pf">0%<small>Ating.</small></div>
-          <div class="card-inner">
-            <div class="card-header">
-              <div class="card-title"><span>👤</span><span>Crédito PF</span></div>
-              <button class="export-btn" onclick="exportCard('card-pf','Credito_PF')">📸 Exportar</button>
+    <!-- ======= DASHBOARD (PF e PJ) ======= -->
+    <div class="dashboard">
+      <!-- CARD PF -->
+      <div class="card royal" id="card-pf">
+        <div class="percent-badge" id="badge-pf">0%<small>Ating.</small></div>
+        <div class="card-inner">
+          <div class="card-header">
+            <div class="card-title"><span>👤</span><span>Crédito PF</span></div>
+            <button class="export-btn" onclick="exportCard('card-pf','Credito_PF')">📸 Exportar</button>
+          </div>
+          <div class="percent-chip" id="chip-pf">Atingimento PF: <span style="margin-left:6px" id="chip-value-pf">0%</span></div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-pf" style="width:0%">
+              <div class="progress-glow"></div>
+              <span class="progress-text" id="progress-text-pf">0%</span>
             </div>
-            <div class="percent-chip" id="chip-pf">Atingimento PF: <span style="margin-left:6px" id="chip-value-pf">0%</span></div>
-            <div class="progress-bar-container">
-              <div class="progress-bar royal" id="progress-pf" style="width:0%">
-                <div class="progress-glow"></div>
-                <span class="progress-text" id="progress-text-pf">0%</span>
-              </div>
+          </div>
+          <div class="values">
+            <div class="value-item">
+              <div class="value-label">Meta PF</div>
+              <div class="value-amount" id="meta-display-pf">R$ 0</div>
             </div>
-            <div class="values">
-              <div class="value-item">
-                <div class="value-label">Meta PF</div>
-                <div class="value-amount" id="meta-display-pf">R$ 0</div>
-              </div>
-              <div class="value-item">
-                <div class="value-label">Realizado Total</div>
-                <div class="value-amount" id="realizado-total-pf">R$ 0</div>
-              </div>
+            <div class="value-item">
+              <div class="value-label">Realizado Total</div>
+              <div class="value-amount" id="realizado-total-pf">R$ 0</div>
             </div>
-            <div class="breakdown">
-              <div class="breakdown-item">
-                <div class="breakdown-label">💳 Consignado</div>
-                <div class="breakdown-value" id="breakdown-consignado">R$ 0</div>
-              </div>
-              <div class="breakdown-item">
-                <div class="breakdown-label">💰 Não Consignado</div>
-                <div class="breakdown-value" id="breakdown-nao-consignado">R$ 0</div>
-              </div>
+          </div>
+          <div class="breakdown">
+            <div class="breakdown-item">
+              <div class="breakdown-label">💳 Consignado</div>
+              <div class="breakdown-value" id="breakdown-consignado">R$ 0</div>
             </div>
-            <div class="pacing" id="pacing-pf">
-              <div class="pace"><div class="k">% esperado</div><div class="v" id="pf-exp-pct">0%</div></div>
-              <div class="pace"><div class="k">Valor esperado</div><div class="v" id="pf-exp-val">R$ 0</div></div>
-              <div class="pace"><div class="k">Ritmo atual</div><div class="v" id="pf-vel-atual">R$ 0/h</div></div>
-              <div class="pace"><div class="k">Necessário</div><div class="v" id="pf-vel-need">R$ 0/h</div></div>
-              <div class="pace" id="pf-gap-box"><div class="k">Gap de ritmo</div><div class="v" id="pf-gap">—</div></div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">💰 Não Consignado</div>
+              <div class="breakdown-value" id="breakdown-nao-consignado">R$ 0</div>
             </div>
-            <div class="fuel-scene">
+          </div>
+          <div class="pacing" id="pacing-pf">
+            <div class="pace"><div class="k">% esperado</div><div class="v" id="pf-exp-pct">0%</div></div>
+            <div class="pace"><div class="k">Valor esperado</div><div class="v" id="pf-exp-val">R$ 0</div></div>
+            <div class="pace"><div class="k">Ritmo atual</div><div class="v" id="pf-vel-atual">R$ 0/h</div></div>
+            <div class="pace"><div class="k">Necessário</div><div class="v" id="pf-vel-need">R$ 0/h</div></div>
+            <div class="pace" id="pf-gap-box"><div class="k">Gap de ritmo</div><div class="v" id="pf-gap">—</div></div>
+          </div>
+          <div class="fuel-scene">
+            <div class="fuel-scale">
               <div class="fuel-container">
                 <div class="fuel-tank">
                   <div class="fuel-frame"></div>
@@ -390,52 +314,55 @@
                 </div>
               </div>
             </div>
-            <div class="status-badge status-danger" id="status-pf">—</div>
           </div>
+          <div class="status-badge status-danger" id="status-pf">—</div>
         </div>
+      </div>
 
-        <div class="card royal" id="card-pj">
-          <div class="percent-badge" id="badge-pj">0%<small>Ating.</small></div>
-          <div class="card-inner">
-            <div class="card-header">
-              <div class="card-title"><span>🏢</span><span>Crédito PJ</span></div>
-              <button class="export-btn" onclick="exportCard('card-pj','Credito_PJ')">📸 Exportar</button>
+      <!-- CARD PJ -->
+      <div class="card royal" id="card-pj">
+        <div class="percent-badge" id="badge-pj">0%<small>Ating.</small></div>
+        <div class="card-inner">
+          <div class="card-header">
+            <div class="card-title"><span>🏢</span><span>Crédito PJ</span></div>
+            <button class="export-btn" onclick="exportCard('card-pj','Credito_PJ')">📸 Exportar</button>
+          </div>
+          <div class="percent-chip" id="chip-pj">Atingimento PJ: <span style="margin-left:6px" id="chip-value-pj">0%</span></div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-pj" style="width:0%">
+              <div class="progress-glow"></div>
+              <span class="progress-text" id="progress-text-pj">0%</span>
             </div>
-            <div class="percent-chip" id="chip-pj">Atingimento PJ: <span style="margin-left:6px" id="chip-value-pj">0%</span></div>
-            <div class="progress-bar-container">
-              <div class="progress-bar royal" id="progress-pj" style="width:0%">
-                <div class="progress-glow"></div>
-                <span class="progress-text" id="progress-text-pj">0%</span>
-              </div>
+          </div>
+          <div class="values">
+            <div class="value-item">
+              <div class="value-label">Meta PJ</div>
+              <div class="value-amount" id="meta-display-pj">R$ 0</div>
             </div>
-            <div class="values">
-              <div class="value-item">
-                <div class="value-label">Meta PJ</div>
-                <div class="value-amount" id="meta-display-pj">R$ 0</div>
-              </div>
-              <div class="value-item">
-                <div class="value-label">Realizado Total</div>
-                <div class="value-amount" id="realizado-total-pj">R$ 0</div>
-              </div>
+            <div class="value-item">
+              <div class="value-label">Realizado Total</div>
+              <div class="value-amount" id="realizado-total-pj">R$ 0</div>
             </div>
-            <div class="breakdown">
-              <div class="breakdown-item">
-                <div class="breakdown-label">📈 Giro</div>
-                <div class="breakdown-value" id="breakdown-giro">R$ 0</div>
-              </div>
-              <div class="breakdown-item">
-                <div class="breakdown-label">📊 Recebíveis</div>
-                <div class="breakdown-value" id="breakdown-recebiveis">R$ 0</div>
-              </div>
+          </div>
+          <div class="breakdown">
+            <div class="breakdown-item">
+              <div class="breakdown-label">📈 Giro</div>
+              <div class="breakdown-value" id="breakdown-giro">R$ 0</div>
             </div>
-            <div class="pacing" id="pacing-pj">
-              <div class="pace"><div class="k">% esperado</div><div class="v" id="pj-exp-pct">0%</div></div>
-              <div class="pace"><div class="k">Valor esperado</div><div class="v" id="pj-exp-val">R$ 0</div></div>
-              <div class="pace"><div class="k">Ritmo atual</div><div class="v" id="pj-vel-atual">R$ 0/h</div></div>
-              <div class="pace"><div class="k">Necessário</div><div class="v" id="pj-vel-need">R$ 0/h</div></div>
-              <div class="pace" id="pj-gap-box"><div class="k">Gap de ritmo</div><div class="v" id="pj-gap">—</div></div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">📊 Recebíveis</div>
+              <div class="breakdown-value" id="breakdown-recebiveis">R$ 0</div>
             </div>
-            <div class="fuel-scene">
+          </div>
+          <div class="pacing" id="pacing-pj">
+            <div class="pace"><div class="k">% esperado</div><div class="v" id="pj-exp-pct">0%</div></div>
+            <div class="pace"><div class="k">Valor esperado</div><div class="v" id="pj-exp-val">R$ 0</div></div>
+            <div class="pace"><div class="k">Ritmo atual</div><div class="v" id="pj-vel-atual">R$ 0/h</div></div>
+            <div class="pace"><div class="k">Necessário</div><div class="v" id="pj-vel-need">R$ 0/h</div></div>
+            <div class="pace" id="pj-gap-box"><div class="k">Gap de ritmo</div><div class="v" id="pj-gap">—</div></div>
+          </div>
+          <div class="fuel-scene">
+            <div class="fuel-scale">
               <div class="fuel-container">
                 <div class="fuel-tank">
                   <div class="fuel-frame"></div>
@@ -451,96 +378,10 @@
                 </div>
               </div>
             </div>
-            <div class="status-badge status-danger" id="status-pj">—</div>
           </div>
+          <div class="status-badge status-danger" id="status-pj">—</div>
         </div>
       </div>
-
-      <h2>📊 Visão Condensada</h2>
-      <div class="condensed-dashboard">
-        <div class="card-condensed royal" id="card-pf-condensed">
-          <div class="percent-badge" id="badge-pf-condensed">0%<small>Ating.</small></div>
-          <div class="card-header">
-            <div class="card-title"><span>👤</span><span>PF</span></div>
-            <button class="export-btn" onclick="exportCard('card-pf-condensed','Credito_PF_Condensado')">📸 Exportar</button>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar royal" id="progress-pf-condensed" style="width:0%">
-              <div class="progress-glow"></div>
-              <span class="progress-text" id="progress-text-pf-condensed">0%</span>
-            </div>
-          </div>
-          <div class="values">
-            <div class="value-item">
-              <div class="value-label">Meta</div>
-              <div class="value-amount" id="meta-display-pf-condensed">R$ 0</div>
-            </div>
-            <div class="value-item">
-              <div class="value-label">Realizado</div>
-              <div class="value-amount" id="realizado-total-pf-condensed">R$ 0</div>
-            </div>
-          </div>
-          <div class="breakdown">
-            <div class="breakdown-item">
-              <div class="breakdown-label">💳 Consignado</div>
-              <div class="breakdown-value" id="breakdown-consignado-condensed">R$ 0</div>
-            </div>
-            <div class="breakdown-item">
-              <div class="breakdown-label">💰 Não Consignado</div>
-              <div class="breakdown-value" id="breakdown-nao-consignado-condensed">R$ 0</div>
-            </div>
-          </div>
-          <div class="pacing">
-            <div class="pace"><div class="k">Esperado</div><div class="v" id="pf-exp-val-condensed">R$ 0</div></div>
-            <div class="pace"><div class="k">Ritmo Atual</div><div class="v" id="pf-vel-atual-condensed">R$ 0/h</div></div>
-            <div class="pace"><div class="k">Necessário</div><div class="v" id="pf-vel-need-condensed">R$ 0/h</div></div>
-            <div class="pace" id="pf-gap-box-condensed"><div class="k">Gap</div><div class="v" id="pf-gap-condensed">—</div></div>
-          </div>
-          <div class="status-badge status-danger" id="status-pf-condensed">—</div>
-        </div>
-
-        <div class="card-condensed royal" id="card-pj-condensed">
-          <div class="percent-badge" id="badge-pj-condensed">0%<small>Ating.</small></div>
-          <div class="card-header">
-            <div class="card-title"><span>🏢</span><span>PJ</span></div>
-            <button class="export-btn" onclick="exportCard('card-pj-condensed','Credito_PJ_Condensado')">📸 Exportar</button>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar royal" id="progress-pj-condensed" style="width:0%">
-              <div class="progress-glow"></div>
-              <span class="progress-text" id="progress-text-pj-condensed">0%</span>
-            </div>
-          </div>
-          <div class="values">
-            <div class="value-item">
-              <div class="value-label">Meta</div>
-              <div class="value-amount" id="meta-display-pj-condensed">R$ 0</div>
-            </div>
-            <div class="value-item">
-              <div class="value-label">Realizado</div>
-              <div class="value-amount" id="realizado-total-pj-condensed">R$ 0</div>
-            </div>
-          </div>
-          <div class="breakdown">
-            <div class="breakdown-item">
-              <div class="breakdown-label">📈 Giro</div>
-              <div class="breakdown-value" id="breakdown-giro-condensed">R$ 0</div>
-            </div>
-            <div class="breakdown-item">
-              <div class="breakdown-label">📊 Recebíveis</div>
-              <div class="breakdown-value" id="breakdown-recebiveis-condensed">R$ 0</div>
-            </div>
-          </div>
-          <div class="pacing">
-            <div class="pace"><div class="k">Esperado</div><div class="v" id="pj-exp-val-condensed">R$ 0</div></div>
-            <div class="pace"><div class="k">Ritmo Atual</div><div class="v" id="pj-vel-atual-condensed">R$ 0/h</div></div>
-            <div class="pace"><div class="k">Necessário</div><div class="v" id="pj-vel-need-condensed">R$ 0/h</div></div>
-            <div class="pace" id="pj-gap-box-condensed"><div class="k">Gap</div><div class="v" id="pj-gap-condensed">—</div></div>
-          </div>
-          <div class="status-badge status-danger" id="status-pj-condensed">—</div>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -558,8 +399,8 @@
       $$('.palette-btn').forEach(b=>b.classList.remove('active'));
       const btn = Array.from($$('.palette-btn')).find(b=>b.className.includes(`palette-${theme}`));
       if(btn) btn.classList.add('active');
+      // Apenas borda, fonte etc. mudam; barras ganham cor dinâmica pelo %
       $$('.card').forEach(card=>{ stripTheme(card); card.classList.add(theme); });
-      $$('.card-condensed').forEach(card=>{ stripTheme(card); card.classList.add(theme); });
       const bgMap = {
         royal:['#1e3c72','#2a5298','#7e22ce'],
         gold:['#9a5b00','#d69200','#ffd200'],
@@ -571,6 +412,8 @@
       document.documentElement.style.setProperty('--bg1',a);
       document.documentElement.style.setProperty('--bg2',b);
       document.documentElement.style.setProperty('--bg3',c);
+      // Recalcular cores dinâmicas após mudar tema
+      updateDashboard();
     }
 
     function setStatus(el, p){
@@ -579,6 +422,20 @@
       if(p >= 100) el.classList.add('status-success'), el.textContent = 'Meta batida!';
       else if(p >= 80) el.classList.add('status-warning'), el.textContent = 'Quase lá';
       else el.classList.add('status-danger'), el.textContent = 'Atenção';
+    }
+
+    // Cor dinâmica progressiva (0=vermelho -> 100=verde)
+    function barGradientFor(percent){
+      const clamp = Math.max(0, Math.min(100, percent));
+      const hue = (clamp/100)*120; // 0 red -> 120 green
+      const color1 = `hsl(${hue},85%,50%)`;
+      const color2 = `hsl(${Math.max(hue-12,0)},85%,45%)`;
+      return `linear-gradient(90deg, ${color1} 0%, ${color2} 100%)`;
+    }
+    function colorizeBar(el, percent){
+      if(!el) return;
+      el.style.background = barGradientFor(percent);
+      el.style.boxShadow = `0 0 14px hsla(${(percent/100)*120},85%,50%,.45)`;
     }
 
     function hhmmToDateToday(hhmm){
@@ -623,6 +480,7 @@
       const nowEl = $('#now-display');
       if(nowEl) nowEl.value = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
+      // PF
       const metaPF = parseFloat($('#meta-pf').value)||0;
       const consPF  = parseFloat($('#realizado-consignado').value)||0;
       const nconsPF = parseFloat($('#realizado-nao-consignado').value)||0;
@@ -633,7 +491,9 @@
       $('#realizado-total-pf').textContent = brMoney(realPF);
       $('#breakdown-consignado').textContent = brMoney(consPF);
       $('#breakdown-nao-consignado').textContent = brMoney(nconsPF);
-      $('#progress-pf').style.width = Math.min(atingPF,100)+'%';
+      const pbPF = $('#progress-pf');
+      pbPF.style.width = Math.min(atingPF,100)+'%';
+      colorizeBar(pbPF, Math.min(atingPF,100));
       $('#progress-text-pf').textContent = pctStr(atingPF);
       $('#chip-value-pf').textContent = pctStr(atingPF);
       $('#badge-pf').innerHTML = `${(atingPF).toFixed(0)}%<small>Ating.</small>`;
@@ -648,20 +508,7 @@
       $('#pf-gap').textContent = isFinite(pPF.gap)? `${(pPF.gap>=0?'+':'')}${brMoney(pPF.gap)}/h` : '—';
       paintGap($('#pf-gap-box'), pPF.gap);
 
-      $('#meta-display-pf-condensed').textContent = brMoney(metaPF);
-      $('#realizado-total-pf-condensed').textContent = brMoney(realPF);
-      $('#breakdown-consignado-condensed').textContent = brMoney(consPF);
-      $('#breakdown-nao-consignado-condensed').textContent = brMoney(nconsPF);
-      $('#progress-pf-condensed').style.width = Math.min(atingPF,100)+'%';
-      $('#progress-text-pf-condensed').textContent = pctStr(atingPF);
-      $('#badge-pf-condensed').innerHTML = `${(atingPF).toFixed(0)}%<small>Ating.</small>`;
-      setStatus($('#status-pf-condensed'), atingPF);
-      $('#pf-exp-val-condensed').textContent = brMoney(pPF.expectedVal);
-      $('#pf-vel-atual-condensed').textContent = isFinite(pPF.ritmoAtual)? `${brMoney(pPF.ritmoAtual)}/h` : '—';
-      $('#pf-vel-need-condensed').textContent  = isFinite(pPF.ritmoNecessario)? `${brMoney(pPF.ritmoNecessario)}/h` : '∞';
-      $('#pf-gap-condensed').textContent = isFinite(pPF.gap)? `${(pPF.gap>=0?'+':'')}${brMoney(pPF.gap)}/h` : '—';
-      paintGap($('#pf-gap-box-condensed'), pPF.gap);
-
+      // PJ
       const metaPJ = parseFloat($('#meta-pj').value)||0;
       const giro   = parseFloat($('#desembolso-giro').value)||0;
       const rec    = parseFloat($('#desembolso-recebiveis').value)||0;
@@ -672,7 +519,9 @@
       $('#realizado-total-pj').textContent = brMoney(realPJ);
       $('#breakdown-giro').textContent = brMoney(giro);
       $('#breakdown-recebiveis').textContent = brMoney(rec);
-      $('#progress-pj').style.width = Math.min(atingPJ,100)+'%';
+      const pbPJ = $('#progress-pj');
+      pbPJ.style.width = Math.min(atingPJ,100)+'%';
+      colorizeBar(pbPJ, Math.min(atingPJ,100));
       $('#progress-text-pj').textContent = pctStr(atingPJ);
       $('#chip-value-pj').textContent = pctStr(atingPJ);
       $('#badge-pj').innerHTML = `${(atingPJ).toFixed(0)}%<small>Ating.</small>`;
@@ -686,20 +535,6 @@
       $('#pj-vel-need').textContent  = isFinite(pPJ.ritmoNecessario)? `${brMoney(pPJ.ritmoNecessario)}/h` : '∞';
       $('#pj-gap').textContent = isFinite(pPJ.gap)? `${(pPJ.gap>=0?'+':'')}${brMoney(pPJ.gap)}/h` : '—';
       paintGap($('#pj-gap-box'), pPJ.gap);
-
-      $('#meta-display-pj-condensed').textContent = brMoney(metaPJ);
-      $('#realizado-total-pj-condensed').textContent = brMoney(realPJ);
-      $('#breakdown-giro-condensed').textContent = brMoney(giro);
-      $('#breakdown-recebiveis-condensed').textContent = brMoney(rec);
-      $('#progress-pj-condensed').style.width = Math.min(atingPJ,100)+'%';
-      $('#progress-text-pj-condensed').textContent = pctStr(atingPJ);
-      $('#badge-pj-condensed').innerHTML = `${(atingPJ).toFixed(0)}%<small>Ating.</small>`;
-      setStatus($('#status-pj-condensed'), atingPJ);
-      $('#pj-exp-val-condensed').textContent = brMoney(pPJ.expectedVal);
-      $('#pj-vel-atual-condensed').textContent = isFinite(pPJ.ritmoAtual)? `${brMoney(pPJ.ritmoAtual)}/h` : '—';
-      $('#pj-vel-need-condensed').textContent  = isFinite(pPJ.ritmoNecessario)? `${brMoney(pPJ.ritmoNecessario)}/h` : '∞';
-      $('#pj-gap-condensed').textContent = isFinite(pPJ.gap)? `${(pPJ.gap>=0?'+':'')}${brMoney(pPJ.gap)}/h` : '—';
-      paintGap($('#pj-gap-box-condensed'), pPJ.gap);
     }
 
     function bindInputs(){
@@ -721,8 +556,6 @@
     async function exportAll(){
       await exportCard('card-pf','Credito_PF');
       await exportCard('card-pj','Credito_PJ');
-      await exportCard('card-pf-condensed','Credito_PF_Condensado');
-      await exportCard('card-pj-condensed','Credito_PJ_Condensado');
     }
 
     document.addEventListener('DOMContentLoaded', () => {
