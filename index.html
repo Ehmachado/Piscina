@@ -3,23 +3,20 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard de Metas - Tanque Fuel (Condensado + Export Shrink)</title>
+  <title>Dashboard de Metas - Tanque Fuel (index)</title>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     :root{
       --bg1:#1e3c72; --bg2:#2a5298; --bg3:#7e22ce;
-      --glass:#fffffffa; --ink:#1a1a2e; --muted:#666; --card-shadow:0 18px 48px rgba(0,0,0,.25);
-      --chip-bg:#eef2ff; --chip-text:#111827;
-      --good:#28a745; --warn:#ffc107; --bad:#dc3545;
-      --scale:1.25; /* tela mais contida que a sua original (1.5) */
-      --export-scale:.7; /* ⬅️ reduz 30% no export */
-      --neutral-bar-from:#4f46e5; --neutral-bar-to:#60a5fa; /* barra neutra, não muda com tema */
+      --glass:#fffffffa; --ink:#1a1a2e; --muted:#666; --card-shadow:0 25px 70px rgba(0,0,0,.3);
+      --chip-bg:#eef2ff; --chip-text:#111827; --good:#28a745; --warn:#ffc107; --bad:#dc3545;
+      --scale:1.5;
     }
     body{
       font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
       background:linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 50%,var(--bg3) 100%);
-      min-height:100vh; padding:16px;
+      min-height:100vh; padding:20px;
     }
     .scale-wrap{
       transform:scale(var(--scale));
@@ -27,200 +24,230 @@
       width:calc(100% / var(--scale));
       margin:0 auto;
     }
-    .container{max-width:1200px;margin:0 auto}
+
+    .container{max-width:1400px;margin:0 auto}
     .controls{
       background:var(--glass); backdrop-filter:blur(10px);
-      padding:22px;border-radius:18px;box-shadow:var(--card-shadow);margin-bottom:39px; /* 26px -> 39px */
+      padding:35px;border-radius:25px;box-shadow:var(--card-shadow);margin-bottom:40px;
     }
     h1{
-      margin-bottom:12px; /* 8px -> 12px */
-      color:#1a1a2e;font-size:28px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:1.5px;
+      margin-bottom:30px;color:#1a1a2e;font-size:36px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:2px;
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
       -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
     }
-    .subnote{font-size:12px;color:#555;text-align:center}
-
-    .palette-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:21px 0} /* 14px -> 21px */
-    .palette-btn{
-      padding:12px;border:2px solid transparent;border-radius:12px;cursor:pointer;font-size:13px;font-weight:800;transition:.25s;position:relative;overflow:hidden;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.25)
+    .subnote{font-size:14px;color:#555;text-align:center;margin-top:6px}
+    h2 {
+        text-align: center;
+        color: #fff;
+        font-size: 28px;
+        font-weight: 700;
+        margin: 40px 0 20px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
     }
-    .palette-btn::before{content:'';position:absolute;inset:0;left:-100%;background:rgba(255,255,255,.18);transition:left .35s}
+
+    .palette-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px}
+    .palette-btn{
+      padding:18px;border:3px solid transparent;border-radius:15px;cursor:pointer;font-size:15px;font-weight:700;transition:.3s;position:relative;overflow:hidden;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3)
+    }
+    .palette-btn::before{content:'';position:absolute;inset:0;left:-100%;background:rgba(255,255,255,.2);transition:left .4s}
     .palette-btn:hover::before{left:100%}
-    .palette-btn.active{transform:scale(1.03);box-shadow:0 8px 22px rgba(0,0,0,.35);border-color:rgba(255,255,255,.8)}
+    .palette-btn.active{transform:scale(1.05);box-shadow:0 10px 30px rgba(0,0,0,.4);border-color:rgba(255,255,255,.8)}
     .palette-royal{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%)}
     .palette-gold{background:linear-gradient(135deg,#f7971e 0%,#ffd200 100%)}
     .palette-emerald{background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%)}
     .palette-sunset{background:linear-gradient(135deg,#fa709a 0%,#fee140 100%)}
     .palette-ocean{background:linear-gradient(135deg,#2e3192 0%,#1bffff 100%)}
 
-    .scheduler{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
-    .sched-item{display:flex;flex-direction:column;gap:6px}
-    .sched-item label{font-size:11px;color:#444;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
-    .sched-item input{padding:10px;border:2px solid #ddd;border-radius:10px;font-size:15px;font-weight:700}
-    .note{font-size:11px;color:#666}
-
-    .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:14px;margin-top:21px} /* 14px -> 21px */
-    .input-group{background:linear-gradient(135deg,#fafbfc 0%,#eef1f4 100%);padding:14px;border-radius:14px;border:2px solid #dee2e6}
-    .input-group h3{margin-bottom:10px;color:#2c3e50;font-size:16px;text-transform:uppercase;letter-spacing:1px;font-weight:900}
-    .input-row{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-    label{font-size:12px;color:#555;font-weight:800;text-transform:uppercase;letter-spacing:.4px}
-    input[type=number]{padding:10px;border:2px solid #ddd;border-radius:10px;font-size:16px;font-weight:700;background:#fff}
-    input:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.15)}
-
-    .input-subgroup{background:#ffffffb3;padding:10px;border-radius:10px;margin-bottom:8px;border:2px dashed #c9ced6}
-    .input-subgroup h4{font-size:13px;color:#495057;margin-bottom:6px;font-weight:800}
-
-    /* ===== CARDS CONDENSADOS ===== */
-    .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(460px,1fr));gap:18px}
-    .card{
-      background:#fff; /* ⬅️ fundo branco */
-      border-radius:18px;padding:18px;box-shadow:var(--card-shadow);position:relative;overflow:hidden;transition:.25s; margin:18px; /* 12px -> 18px */
-      border:4px solid #e5e7eb; /* ⬅️ borda neutra, muda por tema abaixo */
+    .scheduler{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px
     }
-    .card:hover{transform:translateY(-6px)}
-    /* Tema afeta só borda e tipografia/acento */
+    .sched-item{display:flex;flex-direction:column;gap:6px}
+    .sched-item label{font-size:12px;color:#444;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    .sched-item input{padding:12px;border:2px solid #ddd;border-radius:10px;font-size:16px;font-weight:600}
+    .note{font-size:12px;color:#666}
+
+    .input-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:25px;margin-top:20px}
+    .input-group{background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);padding:22px;border-radius:18px;border:3px solid #dee2e6;transition:.3s}
+    .input-group:hover{transform:translateY(-5px);box-shadow:0 10px 25px rgba(0,0,0,.15)}
+    .input-group h3{margin-bottom:14px;color:#2c3e50;font-size:20px;text-transform:uppercase;letter-spacing:1.5px;font-weight:800}
+    .input-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    label{font-size:13px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+    input[type=number]{padding:12px;border:3px solid #ddd;border-radius:10px;font-size:18px;font-weight:600;transition:.3s;background:#fff}
+    input:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 4px rgba(102,126,234,.15);transform:scale(1.02)}
+    .input-subgroup{background:#ffffffb3;padding:14px;border-radius:12px;margin-bottom:12px;border:2px dashed #adb5bd}
+    .input-subgroup h4{font-size:14px;color:#495057;margin-bottom:10px;font-weight:700}
+
+    .dashboard{display:grid;grid-template-columns:repeat(auto-fit,minmax(520px,1fr));gap:35px}
+    .card{
+      border-radius:25px;padding:35px;box-shadow:var(--card-shadow);position:relative;overflow:hidden;transition:.3s; margin:20px;
+      background:#fff;
+      width:70%; justify-self:center;           /* CHANGE 1 */
+      border:12px solid transparent;            /* CHANGE 2 */
+    }
+    .card:hover{transform:translateY(-10px);box-shadow:0 35px 90px rgba(0,0,0,.4)}
     .card.royal{border-color:#667eea}
     .card.gold{border-color:#f7971e}
     .card.emerald{border-color:#11998e}
     .card.sunset{border-color:#fa709a}
     .card.ocean{border-color:#2e3192}
 
-    .card-inner{border-radius:12px;padding:14px;background:#fff}
-    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px} /* 10px -> 15px */
-    .card-title{font-size:22px;font-weight:900;color:#2c3e50;display:flex;align-items:center;gap:10px;text-transform:uppercase;letter-spacing:1px}
-    .card.royal .card-title{color:#3730a3}
-    .card.gold .card-title{color:#8a4b00}
-    .card.emerald .card-title{color:#0f5132}
-    .card.sunset .card-title{color:#9b2c60}
-    .card.ocean .card-title{color:#1e3a8a}
-
-    .export-btn{background:#111827;color:#fff;border:none;padding:9px 16px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:900;transition:.2s;box-shadow:0 4px 14px rgba(0,0,0,.25);text-transform:uppercase;letter-spacing:.4px}
-    .export-btn:hover{transform:translateY(-2px)}
+    .card-inner{border-radius:20px;padding:28px;position:relative;transition:background .3s;background:#fff}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .card-title{font-size:30px;font-weight:900;color:#2c3e50;display:flex;align-items:center;gap:14px;text-transform:uppercase;letter-spacing:1.2px}
+    .export-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;padding:12px 24px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:800;transition:.3s;box-shadow:0 6px 20px rgba(102,126,234,.4);text-transform:uppercase;letter-spacing:.5px}
+    .export-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(102,126,234,.6)}
 
     .percent-chip{
-      display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;
-      font-weight:900;letter-spacing:.3px;font-size:14px;margin-bottom:12px; /* 8px -> 12px */
-      background:var(--chip-bg);color:var(--chip-text);border:2px solid #e5e7eb;
+      display:inline-flex;align-items:center;gap:12px;padding:14px 20px;border-radius:999px;
+      font-weight:900;letter-spacing:.5px;font-size:18px;margin-bottom:14px;
+      background:var(--chip-bg);color:var(--chip-text);border:3px solid #e5e7eb;
+      box-shadow:0 4px 12px rgba(0,0,0,.12);
     }
-    .card.royal .percent-chip{border-color:#667eea}
-    .card.gold .percent-chip{border-color:#f7971e}
-    .card.emerald .percent-chip{border-color:#11998e}
-    .card.sunset .percent-chip{border-color:#fa709a}
-    .card.ocean .percent-chip{border-color:#2e3192}
 
-    .progress-bar-container{width:100%;height:32px;background:linear-gradient(135deg,#eef2f7 0%,#e6ebf2 100%);border-radius:18px;overflow:hidden;position:relative;margin:9px 0 15px; /* 6px 0 10px -> 9px 0 15px */ border:2px solid rgba(0,0,0,.05)}
-    .progress-bar{
-      height:100%;border-radius:18px;display:flex;align-items:center;justify-content:flex-end;padding-right:12px;position:relative;overflow:hidden;background-size:200% 100%;
-      background:linear-gradient(90deg,var(--neutral-bar-from) 0%,var(--neutral-bar-to) 100%); /* ⬅️ neutra */
-      animation:shimmer 2.5s infinite
-    }
+    .progress-bar-container{width:100%;height:44px;background:linear-gradient(135deg,#e9ecef 0%,#dee2e6 100%);border-radius:25px;overflow:hidden;position:relative;margin:10px 0 14px;border:3px solid rgba(0,0,0,.05);box-shadow:inset 0 3px 8px rgba(0,0,0,.15)}
+    .progress-bar{height:100%;border-radius:25px;transition:width 1.2s cubic-bezier(.65,0,.35,1);display:flex;align-items:center;justify-content:flex-end;padding-right:18px;position:relative;overflow:hidden;background-size:200% 100%;animation:shimmer 2.5s infinite;background:linear-gradient(90deg,#667eea 0%,#764ba2 50%,#667eea 100%);box-shadow:0 0 25px rgba(102,126,234,.6)}
     @keyframes shimmer{0%{background-position:0% 0%}50%{background-position:100% 0%}100%{background-position:0% 0%}}
-    .progress-text{color:#fff;font-weight:900;font-size:13px;text-shadow:0 2px 4px rgba(0,0,0,.3);z-index:1}
+    .progress-text{color:#fff;font-weight:900;font-size:16px;text-shadow:0 2px 4px rgba(0,0,0,.3);z-index:1}
+    .progress-glow{position:absolute;right:0;top:0;bottom:0;width:60px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5));animation:glow-move 1.8s ease-in-out infinite}
+    @keyframes glow-move{0%,100%{opacity:.4}50%{opacity:1}}
 
-    .values{display:flex;justify-content:space-around;margin:15px 0; /* 10px 0 -> 15px 0 */ padding:10px;background:#f5f6f8;border-radius:12px;border:1px solid #dee2e6}
+    .values{display:flex;justify-content:space-around;margin:16px 0;padding:16px;background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);border-radius:15px;border:2px solid #dee2e6}
     .value-item{text-align:center}
-    .value-label{color:#666;font-size:11px;text-transform:uppercase;letter-spacing:1px;font-weight:800}
-    .value-amount{font-weight:900;font-size:18px;color:#2c3e50}
-
-    .breakdown{display:flex;gap:8px;margin:9px 0 9px; /* 6px 0 6px -> 9px 0 9px */ padding:8px;background:#fafafa;border-radius:10px;border:1px solid #e9ecef}
-    .breakdown-item{flex:1;text-align:center;padding:8px;background:#fff;border-radius:8px;border:1px solid #e9ecef}
-    .breakdown-label{font-size:10px;color:#6c757d;text-transform:uppercase;letter-spacing:.8px;font-weight:800;margin-bottom:4px}
-    .breakdown-value{font-size:17px;font-weight:900;color:#2c3e50}
+    .value-label{color:#666;font-size:13px;margin-bottom:6px;text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+    .value-amount{font-weight:900;font-size:24px;color:#2c3e50;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+    .breakdown{display:flex;gap:12px;margin:8px 0 6px;padding:12px;background:rgba(0,0,0,.03);border-radius:12px}
+    .breakdown-item{flex:1;text-align:center;padding:12px;background:#fff;border-radius:10px;border:2px solid #e9ecef}
+    .breakdown-label{font-size:11px;color:#6c757d;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:6px}
+    .breakdown-value{font-size:20px;font-weight:800;color:#2c3e50}
 
     .percent-badge{
-      position:absolute;top:10px;right:10px;display:flex;align-items:center;justify-content:center;
-      width:84px;height:84px;border-radius:50%;background:#ffffff;
-      box-shadow:0 10px 28px rgba(0,0,0,.18), inset 0 0 0 4px #ffffff;
-      font-weight:900;font-size:18px;color:#111827;border:3px solid #e5e7eb;
+      position:absolute;top:16px;right:16px;display:flex;align-items:center;justify-content:center;
+      width:110px;height:110px;border-radius:50%;background:#ffffffee;
+      box-shadow:0 12px 40px rgba(0,0,0,.25), inset 0 0 0 6px #ffffff;
+      font-weight:900;font-size:24px;color:#111827;text-shadow:0 1px 0 rgba(255,255,255,.6);border:3px solid #e5e7eb;
     }
-    .percent-badge small{display:block;font-size:10px;letter-spacing:.4px;color:#6b7280;margin-top:1px;font-weight:800}
+    .percent-badge small{display:block;font-size:11px;letter-spacing:.5px;color:#6b7280;margin-top:2px;font-weight:800}
 
-    .pacing{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:6px} /* 4px -> 6px */
-    .pace{padding:8px;border-radius:8px;border:1px solid #e9ecef;background:#fff;text-align:center}
-    .pace .k{font-size:10px;color:#666;text-transform:uppercase;letter-spacing:.8px;font-weight:800}
-    .pace .v{font-size:16px;font-weight:900;color:#111;margin-top:2px}
+    .pacing{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:6px}
+    .pace{padding:10px;border-radius:10px;border:2px solid #e9ecef;background:#fff;text-align:center}
+    .pace .k{font-size:11px;color:#666;text-transform:uppercase;letter-spacing:.8px;font-weight:800}
+    .pace .v{font-size:18px;font-weight:900;color:#111;margin-top:4px}
     .pace.good .v{color:#0f9d58}
     .pace.bad .v{color:#c5221f}
 
-    /* Tanque (condensado) */
-    .fuel-scene{height:240px;display:flex;align-items:center;justify-content:center;position:relative;padding:8px}
-    .fuel-container{position:relative;width:150px;height:220px;animation:fuel-float 4s ease-in-out infinite}
-    @keyframes fuel-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-6px)}}
+    .fuel-scene{height:360px;display:flex;align-items:center;justify-content:center;position:relative;padding:16px}
+    .fuel-container{position:relative;width:200px;height:300px;animation:fuel-float 4s ease-in-out infinite}
+    @keyframes fuel-float{0%,100%{transform:translateY(0px)}50%{transform:translateY(-10px)}}
     .fuel-tank{
-      width:150px;height:220px;background:linear-gradient(145deg,#e2e8f0 0%,#cbd5e1 50%,#94a3b8 100%);
-      border-radius:16px;position:relative;border:4px solid #64748b;overflow:hidden;
-      box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 0 30px rgba(255,255,255,.2);
+      width:200px;height:300px;background:linear-gradient(145deg,#e2e8f0 0%,#cbd5e1 50%,#94a3b8 100%);
+      border-radius:20px;position:relative;border:5px solid #64748b;overflow:hidden;
+      box-shadow:0 30px 60px rgba(0,0,0,.4),inset 0 0 50px rgba(255,255,255,.2);
     }
     .fuel-label{
       position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-      font-size:22px;font-weight:900;color:#334155;letter-spacing:5px;z-index:10;
-      text-shadow:0 0 14px rgba(255,255,255,.9),0 2px 4px rgba(0,0,0,.25);
+      font-size:32px;font-weight:900;color:#334155;letter-spacing:6px;z-index:10;
+      text-shadow:0 0 20px rgba(255,255,255,.9),0 2px 4px rgba(0,0,0,.3);
     }
-    .fuel-frame{position:absolute;top:10px;left:10px;right:10px;bottom:10px;border:3px solid rgba(255,255,255,.3);border-radius:12px;box-shadow:inset 0 0 18px rgba(0,0,0,.15)}
-    .level-marks{position:absolute;left:10px;top:20px;bottom:20px;width:16px;display:flex;flex-direction:column;justify-content:space-between;z-index:5}
+    .fuel-frame{position:absolute;top:15px;left:15px;right:15px;bottom:15px;border:3px solid rgba(255,255,255,.3);border-radius:15px;box-shadow:inset 0 0 30px rgba(0,0,0,.15)}
+    .level-marks{position:absolute;left:12px;top:30px;bottom:30px;width:20px;display:flex;flex-direction:column;justify-content:space-between;z-index:5}
     .level-mark{width:100%;height:3px;background:#1e293b;border-radius:2px;position:relative}
-    .level-mark::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:22px;height:3px;background:#1e293b;border-radius:2px}
-    .money-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(244,208,63,.95) 0%,rgba(243,156,18,1) 30%,rgba(214,137,16,1) 70%,#d68910 100%);transition:height 1.2s cubic-bezier(.4,0,.2,1);overflow:hidden;border-radius:0 0 16px 16px}
-    .coins-layer{position:absolute;width:100%;height:100%}
+    .level-mark::after{content:'';position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:28px;height:3px;background:#1e293b;border-radius:2px}
+    .money-fill{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(244,208,63,.95) 0%,rgba(243,156,18,1) 30%,rgba(214,137,16,1) 70%,#d68910 100%);transition:height 1.5s cubic-bezier(.4,0,.2,1);overflow:hidden;border-radius:0 0 20px 20px}
+    .coins-layer{position:absolute;width:100%;height:100%;
+      background-image:
+      radial-gradient(circle at 15% 88%,#f4d03f 0%,transparent 8%),
+      radial-gradient(circle at 30% 82%,#f39c12 0%,transparent 8%),
+      radial-gradient(circle at 45% 90%,#f4d03f 0%,transparent 8%),
+      radial-gradient(circle at 60% 85%,#f39c12 0%,transparent 8%),
+      radial-gradient(circle at 75% 87%,#f4d03f 0%,transparent 8%),
+      radial-gradient(circle at 88% 83%,#f39c12 0%,transparent 8%),
+      radial-gradient(circle at 12% 68%,#f39c12 0%,transparent 7%),
+      radial-gradient(circle at 35% 65%,#f4d03f 0%,transparent 7%),
+      radial-gradient(circle at 55% 70%,#f39c12 0%,transparent 7%),
+      radial-gradient(circle at 72% 67%,#f4d03f 0%,transparent 7%),
+      radial-gradient(circle at 90% 65%,#f39c12 0%,transparent 7%),
+      radial-gradient(circle at 18% 48%,#f4d03f 0%,transparent 6.5%),
+      radial-gradient(circle at 40% 45%,#f39c12 0%,transparent 6.5%),
+      radial-gradient(circle at 62% 50%,#f4d03f 0%,transparent 6.5%),
+      radial-gradient(circle at 82% 47%,#f39c12 0%,transparent 6.5%),
+      radial-gradient(circle at 25% 28%,#f39c12 0%,transparent 6%),
+      radial-gradient(circle at 48% 25%,#f4d03f 0%,transparent 6%),
+      radial-gradient(circle at 70% 30%,#f39c12 0%,transparent 6%),
+      radial-gradient(circle at 85% 27%,#f39c12 0%,transparent 6%)
+    }
     .bills-layer{position:absolute;width:100%;height:100%}
-    .bill{position:absolute;width:40px;height:20px;border-radius:3px;background:linear-gradient(135deg,#27ae60 0%,#229954 100%);border:2px solid #1e8449;box-shadow:0 3px 8px rgba(0,0,0,.3);animation:bill-float 6s ease-in-out infinite}
-    .bill::before{content:'$';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;font-weight:900;color:#f4d03f;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+    .bill{position:absolute;width:50px;height:25px;border-radius:3px;background:linear-gradient(135deg,#27ae60 0%,#229954 100%);border:2px solid #1e8449;box-shadow:0 3px 8px rgba(0,0,0,.35);animation:bill-float 6s ease-in-out infinite}
+    .bill::before{content:'$';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:16px;font-weight:900;color:#f4d03f;text-shadow:0 1px 2px rgba(0,0,0,.3)}
     .bill:nth-child(1){left:15%;bottom:35%;animation-delay:0s}
     .bill:nth-child(2){left:40%;bottom:55%;animation-delay:1.2s}
     .bill:nth-child(3){left:65%;bottom:25%;animation-delay:.6s}
     .bill:nth-child(4){left:80%;bottom:45%;animation-delay:1.8s}
-    @keyframes bill-float{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-6px) rotate(3deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-6px) rotate(-3deg)}}
-    .money-surface{position:absolute;top:-5px;left:0;right:0;height:8px;background:linear-gradient(90deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.35) 100%);border-radius:50%}
+    @keyframes bill-float{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-8px) rotate(4deg)}50%{transform:translateY(0) rotate(0deg)}75%{transform:translateY(-8px) rotate(-4deg)}}
+
+    .money-surface{position:absolute;top:-5px;left:0;right:0;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,.55) 50%,rgba(255,255,255,.35) 100%);border-radius:50%;animation:surface-ripple 3s ease-in-out infinite}
+    @keyframes surface-ripple{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(1.05) translateY(-3px)}}
     .money-shine{position:absolute;top:-120%;left:-60%;width:220%;height:220%;background:linear-gradient(135deg,transparent 0%,rgba(255,255,255,.25) 46%,rgba(255,255,255,.45) 50%,rgba(255,255,255,.25) 54%,transparent 100%);animation:shine-move 5s infinite}
     @keyframes shine-move{0%{transform:translate(-100%,-100%)}100%{transform:translate(120%,120%)}}
-    .money-glow{position:absolute;width:100%;height:100%;background:radial-gradient(ellipse at center bottom,rgba(244,208,63,.55) 0%,rgba(243,156,18,.3) 50%,transparent 80%)}
+    .money-glow{position:absolute;width:100%;height:100%;background:radial-gradient(ellipse at center bottom,rgba(244,208,63,.6) 0%,rgba(243,156,18,.35) 50%,transparent 80%);animation:glow-pulse 3.5s ease-in-out infinite}
+    @keyframes glow-pulse{0%,100%{opacity:.7}50%{opacity:1}}
 
-    .status-badge{display:inline-block;padding:9px 16px;border-radius:24px;font-size:12px;font-weight:900;margin-top:8px;text-transform:uppercase;letter-spacing:1px;box-shadow:0 4px 12px rgba(0,0,0,.15)}
-    .status-success{background:linear-gradient(135deg,#d4edda 0%,#b8e0c5 100%);color:#155724;border:2px solid #28a745}
-    .status-warning{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);color:#856404;border:2px solid #ffc107}
-    .status-danger{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24;border:2px solid #dc3545}
-
-    /* ===== VISÃO CONDENSADA ===== */
-    h2 {text-align:center;color:#fff;font-size:22px;font-weight:800;margin:39px 0 18px; /* 26px 0 12px -> 39px 0 18px */ text-shadow:0 2px 4px rgba(0,0,0,0.25)}
-    .condensed-dashboard {display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px}
-    .card-condensed {
-      background:#ffffff;border-radius:14px;padding:14px 16px;box-shadow:0 6px 18px rgba(0,0,0,0.08);border:4px solid;position:relative
-    }
-    .card-condensed.royal { border-color:#667eea; }
-    .card-condensed.gold { border-color:#f7971e; }
-    .card-condensed.emerald { border-color:#11998e; }
-    .card-condensed.sunset { border-color:#fa709a; }
-    .card-condensed.ocean { border-color:#2e3192; }
-    .card-condensed .card-header { margin-bottom:15px; } /* 10px -> 15px */
-    .card-condensed .card-title { font-size:26px; color:#2c3e50; margin:0; }
-    .card-condensed.royal .card-title{color:#3730a3}
-    .card-condensed.gold .card-title{color:#8a4b00}
-    .card-condensed.emerald .card-title{color:#0f5132}
-    .card-condensed.sunset .card-title{color:#9b2c60}
-    .card-condensed.ocean .card-title{color:#1e3a8a}
-    .card-condensed .percent-badge { width:72px;height:72px;font-size:16px;top:-10px;right:-10px;border:3px solid #fff; }
-    .card-condensed .progress-bar-container { height:34px; margin:15px 0; /* 10px 0 -> 15px 0 */ border-radius:18px; }
-    .card-condensed .values { margin:15px 0; /* 10px 0 -> 15px 0 */ padding:10px; background:#f8f9fa; border-radius:10px; border:1px solid #e9ecef; }
-    .card-condensed .value-amount { font-size:20px; }
-
-    /* ===== EXPORT MODE (layout mobile + shrink 30%) ===== */
-    body.export-mode .export-hide{display:none !important}
-    body.export-mode .card, body.export-mode .card-condensed{
-      width:390px; max-width:390px; margin:0 auto; /* layout mobile */
-      background:#fff !important; /* segurança */
-      border-radius:14px;
-    }
-    .shrink-30{
-      transform:scale(var(--export-scale));
-      transform-origin: top left;
-    }
+    .status-badge{display:inline-block;padding:12px 28px;border-radius:30px;font-size:15px;font-weight:800;margin-top:10px;text-transform:uppercase;letter-spacing:1.5px;box-shadow:0 6px 20px rgba(0,0,0,.2)}
+    .status-success{background:linear-gradient(135deg,#d4edda 0%,#b8e0c5 100%);color:#155724;border:3px solid #28a745}
+    .status-warning{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);color:#856404;border:3px solid #ffc107}
+    .status-danger{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24;border:3px solid #dc3545}
 
     @media (max-width:768px){
-      .scale-wrap{transform:scale(1.1); width:calc(100% / 1.1);}
+      .scale-wrap{transform:scale(1.3); width:calc(100% / 1.3);}
       .dashboard{grid-template-columns:1fr}
-      .condensed-dashboard{grid-template-columns:1fr}
-      .percent-badge{width:76px;height:76px;font-size:16px}
+      .palette-selector{grid-template-columns:1fr}
+      .input-grid{grid-template-columns:1fr}
+      .percent-badge{width:96px;height:96px;font-size:20px}
+      .card{width:90%;}
     }
+
+    .condensed-dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; margin-top: 20px; }
+    .card-condensed {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 20px 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        width:70%; justify-self:center;   /* CHANGE 1 */
+        border:12px solid;                /* CHANGE 2 */
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-condensed:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); }
+    .card-condensed.royal { border-color: #667eea; }
+    .card-condensed.gold { border-color: #f7971e; }
+    .card-condensed.emerald { border-color: #11998e; }
+    .card-condensed.sunset { border-color: #fa709a; }
+    .card-condensed.ocean { border-color: #2e3192; }
+
+    .card-condensed .card-header { margin-bottom: 15px; }
+    .card-condensed .card-title { font-size: 40px; color: #2c3e50; margin: 0; }
+    .card-condensed .export-btn { padding: 10px 18px; font-size: 12px; }
+
+    .card-condensed .percent-badge { width: 90px; height: 90px; font-size: 22px; top: -15px; right: -15px; border: 4px solid #fff; }
+
+    .card-condensed .progress-bar-container { height: 50px; margin: 15px 0; border-radius: 30px; }
+    .card-condensed .progress-bar { border-radius: 30px; }
+    .card-condensed .progress-text { font-size: 18px; }
+
+    .card-condensed .values { margin: 15px 0; padding: 15px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e9ecef; }
+    .card-condensed .value-label { font-size: 14px; }
+    .card-condensed .value-amount { font-size: 32px; }
+
+    .card-condensed .breakdown { margin: 10px 0; padding: 10px; background: #ffffff; border: 1px solid #e9ecef; }
+    .card-condensed .breakdown-label { font-size: 12px; }
+    .card-condensed .breakdown-value { font-size: 24px; }
+
+    .card-condensed .pacing { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 12px; border: 1px solid #e9ecef; }
+    .card-condensed .pace { background: transparent; border: none; padding: 5px; text-align: center; flex: 1; }
+    .card-condensed .pace .k { font-size: 10px; color: #6c757d; }
+    .card-condensed .pace .v { font-size: 22px; margin-top: 2px; }
+    .card-condensed .pace:not(:last-child) { border-right: 1px solid #dee2e6; }
+
+    .card-condensed .status-badge { font-size: 14px; padding: 10px 20px; margin-top: 15px; width: 100%; text-align: center; }
   </style>
 </head>
 <body>
@@ -228,9 +255,9 @@
     <div class="container">
       <div class="controls">
         <h1>⛽ Tanque Fuel</h1>
-        <p class="subnote">Cards condensados, fundo branco. Exporta 30% menor com layout mobile.</p>
+        <p class="subnote">Cards 30% mais curtos (largura) e bordas temáticas 3× mais espessas.</p>
 
-        <div class="palette-selector" style="margin-top:10px">
+        <div class="palette-selector" style="margin-top:12px">
           <button class="palette-btn palette-royal active" onclick="changePalette('royal')">👑 Royal Purple</button>
           <button class="palette-btn palette-gold"   onclick="changePalette('gold')">🌟 Golden Hour</button>
           <button class="palette-btn palette-emerald"onclick="changePalette('emerald')">💎 Emerald Dream</button>
@@ -238,7 +265,6 @@
           <button class="palette-btn palette-ocean"  onclick="changePalette('ocean')">🌊 Ocean Blue</button>
         </div>
 
-        <!-- Janela do dia (pacing) -->
         <div class="scheduler">
           <div class="sched-item">
             <label for="start-time">Início do dia</label>
@@ -255,7 +281,7 @@
           <div class="sched-item">
             <label>&nbsp;</label>
             <button class="export-btn" onclick="exportAll()">📦 Exportar Tudo</button>
-            <div class="note">Exporta 30% menor (mobile).</div>
+            <div class="note">Exporta todos os cards.</div>
           </div>
         </div>
 
@@ -306,19 +332,18 @@
         </div>
       </div>
 
-      <!-- Dashboard -->
       <div class="dashboard">
-        <!-- CARD PF -->
         <div class="card royal" id="card-pf">
           <div class="percent-badge" id="badge-pf">0%<small>Ating.</small></div>
           <div class="card-inner">
             <div class="card-header">
               <div class="card-title"><span>👤</span><span>Crédito PF</span></div>
-              <button class="export-btn export-hide" onclick="exportCard('card-pf','Credito_PF')">📸 Exportar</button>
+              <button class="export-btn" onclick="exportCard('card-pf','Credito_PF')">📸 Exportar</button>
             </div>
             <div class="percent-chip" id="chip-pf">Atingimento PF: <span style="margin-left:6px" id="chip-value-pf">0%</span></div>
             <div class="progress-bar-container">
-              <div class="progress-bar" id="progress-pf" style="width:0%">
+              <div class="progress-bar royal" id="progress-pf" style="width:0%">
+                <div class="progress-glow"></div>
                 <span class="progress-text" id="progress-text-pf">0%</span>
               </div>
             </div>
@@ -359,7 +384,7 @@
                   </div>
                   <div class="money-fill" id="fuel-pf" style="height:0%">
                     <div class="coins-layer"></div>
-                    <div class="bills-layer"><div class="bill"></div><div class="bill"></"></div><div class="bill"></div><div class="bill"></div></div>
+                    <div class="bills-layer"><div class="bill"></div><div class="bill"></div><div class="bill"></div><div class="bill"></div></div>
                     <div class="money-surface"></div><div class="money-shine"></div><div class="money-glow"></div>
                   </div>
                 </div>
@@ -369,17 +394,17 @@
           </div>
         </div>
 
-        <!-- CARD PJ -->
         <div class="card royal" id="card-pj">
           <div class="percent-badge" id="badge-pj">0%<small>Ating.</small></div>
           <div class="card-inner">
             <div class="card-header">
               <div class="card-title"><span>🏢</span><span>Crédito PJ</span></div>
-              <button class="export-btn export-hide" onclick="exportCard('card-pj','Credito_PJ')">📸 Exportar</button>
+              <button class="export-btn" onclick="exportCard('card-pj','Credito_PJ')">📸 Exportar</button>
             </div>
             <div class="percent-chip" id="chip-pj">Atingimento PJ: <span style="margin-left:6px" id="chip-value-pj">0%</span></div>
             <div class="progress-bar-container">
-              <div class="progress-bar" id="progress-pj" style="width:0%">
+              <div class="progress-bar royal" id="progress-pj" style="width:0%">
+                <div class="progress-glow"></div>
                 <span class="progress-text" id="progress-text-pj">0%</span>
               </div>
             </div>
@@ -431,18 +456,17 @@
         </div>
       </div>
 
-      <!-- Visão Condensada -->
       <h2>📊 Visão Condensada</h2>
       <div class="condensed-dashboard">
-        <!-- PF CONDENSADO -->
         <div class="card-condensed royal" id="card-pf-condensed">
           <div class="percent-badge" id="badge-pf-condensed">0%<small>Ating.</small></div>
           <div class="card-header">
             <div class="card-title"><span>👤</span><span>PF</span></div>
-            <button class="export-btn export-hide" onclick="exportCard('card-pf-condensed','Credito_PF_Condensado')">📸 Exportar</button>
+            <button class="export-btn" onclick="exportCard('card-pf-condensed','Credito_PF_Condensado')">📸 Exportar</button>
           </div>
           <div class="progress-bar-container">
-            <div class="progress-bar" id="progress-pf-condensed" style="width:0%">
+            <div class="progress-bar royal" id="progress-pf-condensed" style="width:0%">
+              <div class="progress-glow"></div>
               <span class="progress-text" id="progress-text-pf-condensed">0%</span>
             </div>
           </div>
@@ -475,15 +499,15 @@
           <div class="status-badge status-danger" id="status-pf-condensed">—</div>
         </div>
 
-        <!-- PJ CONDENSADO -->
         <div class="card-condensed royal" id="card-pj-condensed">
           <div class="percent-badge" id="badge-pj-condensed">0%<small>Ating.</small></div>
           <div class="card-header">
             <div class="card-title"><span>🏢</span><span>PJ</span></div>
-            <button class="export-btn export-hide" onclick="exportCard('card-pj-condensed','Credito_PJ_Condensado')">📸 Exportar</button>
+            <button class="export-btn" onclick="exportCard('card-pj-condensed','Credito_PJ_Condensado')">📸 Exportar</button>
           </div>
           <div class="progress-bar-container">
-            <div class="progress-bar" id="progress-pj-condensed" style="width:0%">
+            <div class="progress-bar royal" id="progress-pj-condensed" style="width:0%">
+              <div class="progress-glow"></div>
               <span class="progress-text" id="progress-text-pj-condensed">0%</span>
             </div>
           </div>
@@ -521,10 +545,9 @@
   </div>
 
   <script>
-    // ===== UTIL =====
     const themes = ['royal','gold','emerald','sunset','ocean'];
-    const $ = sel => { const el = document.querySelector(sel); if (!el) console.warn(`Elemento não encontrado: ${sel}`); return el; };
-    const $$ = sel => { const els = document.querySelectorAll(sel); if (els.length === 0) console.warn(`Nenhum elemento encontrado para: ${sel}`); return els; };
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => document.querySelectorAll(sel);
 
     function brMoney(n){ if(isNaN(n) || n === Infinity || n === -Infinity) return 'R$ 0'; return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
     function pctStr(n){ return `${Math.max(0, n).toFixed(1)}%`; }
@@ -532,28 +555,22 @@
     function stripTheme(el){ if(el) themes.forEach(t=>el.classList.remove(t)); }
 
     function changePalette(theme){
-      try{
-        $$('.palette-btn').forEach(b=>b.classList.remove('active'));
-        const btn = Array.from($$('.palette-btn')).find(b=>b.className.includes(`palette-${theme}`));
-        if(btn) btn.classList.add('active');
-
-        // Apenas nos cards (borda/títulos/chips). Barras permanecem neutras!
-        $$('.card').forEach(card=>{ stripTheme(card); card.classList.add(theme); });
-        $$('.card-condensed').forEach(card=>{ stripTheme(card); card.classList.add(theme); });
-
-        // Mantém o fundo do site. Se quiser, pode trocar o gradiente global por tema aqui:
-        const bgMap = {
-          royal:['#1e3c72','#2a5298','#7e22ce'],
-          gold:['#9a5b00','#d69200','#ffd200'],
-          emerald:['#0f766e','#16a34a','#38ef7d'],
-          sunset:['#b83280','#ff7e5f','#fee140'],
-          ocean:['#102a43','#1f3b73','#00c6ff']
-        };
-        const [a,b,c] = bgMap[theme]||bgMap.royal;
-        document.documentElement.style.setProperty('--bg1',a);
-        document.documentElement.style.setProperty('--bg2',b);
-        document.documentElement.style.setProperty('--bg3',c);
-      }catch(e){ console.error("Erro ao mudar a paleta:", e); }
+      $$('.palette-btn').forEach(b=>b.classList.remove('active'));
+      const btn = Array.from($$('.palette-btn')).find(b=>b.className.includes(`palette-${theme}`));
+      if(btn) btn.classList.add('active');
+      $$('.card').forEach(card=>{ stripTheme(card); card.classList.add(theme); });
+      $$('.card-condensed').forEach(card=>{ stripTheme(card); card.classList.add(theme); });
+      const bgMap = {
+        royal:['#1e3c72','#2a5298','#7e22ce'],
+        gold:['#9a5b00','#d69200','#ffd200'],
+        emerald:['#0f766e','#16a34a','#38ef7d'],
+        sunset:['#b83280','#ff7e5f','#fee140'],
+        ocean:['#102a43','#1f3b73','#00c6ff']
+      };
+      const [a,b,c] = bgMap[theme]||bgMap.royal;
+      document.documentElement.style.setProperty('--bg1',a);
+      document.documentElement.style.setProperty('--bg2',b);
+      document.documentElement.style.setProperty('--bg3',c);
     }
 
     function setStatus(el, p){
@@ -564,9 +581,8 @@
       else el.classList.add('status-danger'), el.textContent = 'Atenção';
     }
 
-    // ===== PACING =====
     function hhmmToDateToday(hhmm){
-      const [h,m] = (hhmm||'00:00').split(':').map(Number);
+      const [h,m] = hhmm.split(':').map(Number);
       const now = new Date();
       return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h||0, m||0, 0, 0);
     }
@@ -601,136 +617,106 @@
     }
 
     function updateDashboard(){
-      try{
-        const startEl = $('#start-time');
-        const endEl = $('#end-time');
-        const nowEl = $('#now-display');
-        if (!startEl || !endEl || !nowEl) return;
+      const startStr = ($('#start-time')?.value)||'09:00';
+      const endStr   = ($('#end-time')?.value)||'18:00';
+      const now = getNowLocal();
+      const nowEl = $('#now-display');
+      if(nowEl) nowEl.value = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
-        const startStr = startEl.value || '09:00';
-        const endStr   = endEl.value   || '18:00';
+      const metaPF = parseFloat($('#meta-pf').value)||0;
+      const consPF  = parseFloat($('#realizado-consignado').value)||0;
+      const nconsPF = parseFloat($('#realizado-nao-consignado').value)||0;
+      const realPF = consPF + nconsPF;
+      const atingPF = metaPF>0 ? clampPercent((realPF/metaPF)*100) : 0;
 
-        // Relógio
-        const now = getNowLocal();
-        nowEl.value = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      $('#meta-display-pf').textContent = brMoney(metaPF);
+      $('#realizado-total-pf').textContent = brMoney(realPF);
+      $('#breakdown-consignado').textContent = brMoney(consPF);
+      $('#breakdown-nao-consignado').textContent = brMoney(nconsPF);
+      $('#progress-pf').style.width = Math.min(atingPF,100)+'%';
+      $('#progress-text-pf').textContent = pctStr(atingPF);
+      $('#chip-value-pf').textContent = pctStr(atingPF);
+      $('#badge-pf').innerHTML = `${(atingPF).toFixed(0)}%<small>Ating.</small>`;
+      $('#fuel-pf').style.height = Math.min(atingPF,100)+'%';
+      setStatus($('#status-pf'), atingPF);
 
-        // PF
-        const metaPF = parseFloat($('#meta-pf').value)||0;
-        const consPF  = parseFloat($('#realizado-consignado').value)||0;
-        const nconsPF = parseFloat($('#realizado-nao-consignado').value)||0;
-        const realPF = consPF + nconsPF;
-        const atingPF = metaPF>0 ? clampPercent((realPF/metaPF)*100) : 0;
+      const pPF = calcPacing(metaPF, realPF, startStr, endStr);
+      $('#pf-exp-pct').textContent = pctStr(pPF.expectedPct);
+      $('#pf-exp-val').textContent = brMoney(pPF.expectedVal);
+      $('#pf-vel-atual').textContent = isFinite(pPF.ritmoAtual)? `${brMoney(pPF.ritmoAtual)}/h` : '—';
+      $('#pf-vel-need').textContent  = isFinite(pPF.ritmoNecessario)? `${brMoney(pPF.ritmoNecessario)}/h` : '∞';
+      $('#pf-gap').textContent = isFinite(pPF.gap)? `${(pPF.gap>=0?'+':'')}${brMoney(pPF.gap)}/h` : '—';
+      paintGap($('#pf-gap-box'), pPF.gap);
 
-        $('#meta-display-pf').textContent = brMoney(metaPF);
-        $('#realizado-total-pf').textContent = brMoney(realPF);
-        $('#breakdown-consignado').textContent = brMoney(consPF);
-        $('#breakdown-nao-consignado').textContent = brMoney(nconsPF);
-        $('#progress-pf').style.width = Math.min(atingPF,100)+'%';
-        $('#progress-text-pf').textContent = pctStr(atingPF);
-        $('#chip-value-pf').textContent = pctStr(atingPF);
-        $('#badge-pf').innerHTML = `${(atingPF).toFixed(0)}%<small>Ating.</small>`;
-        $('#fuel-pf').style.height = Math.min(atingPF,100)+'%';
-        setStatus($('#status-pf'), atingPF);
+      $('#meta-display-pf-condensed').textContent = brMoney(metaPF);
+      $('#realizado-total-pf-condensed').textContent = brMoney(realPF);
+      $('#breakdown-consignado-condensed').textContent = brMoney(consPF);
+      $('#breakdown-nao-consignado-condensed').textContent = brMoney(nconsPF);
+      $('#progress-pf-condensed').style.width = Math.min(atingPF,100)+'%';
+      $('#progress-text-pf-condensed').textContent = pctStr(atingPF);
+      $('#badge-pf-condensed').innerHTML = `${(atingPF).toFixed(0)}%<small>Ating.</small>`;
+      setStatus($('#status-pf-condensed'), atingPF);
+      $('#pf-exp-val-condensed').textContent = brMoney(pPF.expectedVal);
+      $('#pf-vel-atual-condensed').textContent = isFinite(pPF.ritmoAtual)? `${brMoney(pPF.ritmoAtual)}/h` : '—';
+      $('#pf-vel-need-condensed').textContent  = isFinite(pPF.ritmoNecessario)? `${brMoney(pPF.ritmoNecessario)}/h` : '∞';
+      $('#pf-gap-condensed').textContent = isFinite(pPF.gap)? `${(pPF.gap>=0?'+':'')}${brMoney(pPF.gap)}/h` : '—';
+      paintGap($('#pf-gap-box-condensed'), pPF.gap);
 
-        const pPF = calcPacing(metaPF, realPF, startStr, endStr);
-        $('#pf-exp-pct').textContent = pctStr(pPF.expectedPct);
-        $('#pf-exp-val').textContent = brMoney(pPF.expectedVal);
-        $('#pf-vel-atual').textContent = isFinite(pPF.ritmoAtual)? `${brMoney(pPF.ritmoAtual)}/h` : '—';
-        $('#pf-vel-need').textContent  = isFinite(pPF.ritmoNecessario)? `${brMoney(pPF.ritmoNecessario)}/h` : '∞';
-        $('#pf-gap').textContent = isFinite(pPF.gap)? `${(pPF.gap>=0?'+':'')}${brMoney(pPF.gap)}/h` : '—';
-        paintGap($('#pf-gap-box'), pPF.gap);
+      const metaPJ = parseFloat($('#meta-pj').value)||0;
+      const giro   = parseFloat($('#desembolso-giro').value)||0;
+      const rec    = parseFloat($('#desembolso-recebiveis').value)||0;
+      const realPJ = giro + rec;
+      const atingPJ = metaPJ>0 ? clampPercent((realPJ/metaPJ)*100) : 0;
 
-        // PF Condensado
-        $('#meta-display-pf-condensed').textContent = brMoney(metaPF);
-        $('#realizado-total-pf-condensed').textContent = brMoney(realPF);
-        $('#breakdown-consignado-condensed').textContent = brMoney(consPF);
-        $('#breakdown-nao-consignado-condensed').textContent = brMoney(nconsPF);
-        $('#progress-pf-condensed').style.width = Math.min(atingPF,100)+'%';
-        $('#progress-text-pf-condensed').textContent = pctStr(atingPF);
-        $('#badge-pf-condensed').innerHTML = `${(atingPF).toFixed(0)}%<small>Ating.</small>`;
-        setStatus($('#status-pf-condensed'), atingPF);
-        $('#pf-exp-val-condensed').textContent = brMoney(pPF.expectedVal);
-        $('#pf-vel-atual-condensed').textContent = isFinite(pPF.ritmoAtual)? `${brMoney(pPF.ritmoAtual)}/h` : '—';
-        $('#pf-vel-need-condensed').textContent  = isFinite(pPF.ritmoNecessario)? `${brMoney(pPF.ritmoNecessario)}/h` : '∞';
-        $('#pf-gap-condensed').textContent = isFinite(pPF.gap)? `${(pPF.gap>=0?'+':'')}${brMoney(pPF.gap)}/h` : '—';
-        paintGap($('#pf-gap-box-condensed'), pPF.gap);
+      $('#meta-display-pj').textContent = brMoney(metaPJ);
+      $('#realizado-total-pj').textContent = brMoney(realPJ);
+      $('#breakdown-giro').textContent = brMoney(giro);
+      $('#breakdown-recebiveis').textContent = brMoney(rec);
+      $('#progress-pj').style.width = Math.min(atingPJ,100)+'%';
+      $('#progress-text-pj').textContent = pctStr(atingPJ);
+      $('#chip-value-pj').textContent = pctStr(atingPJ);
+      $('#badge-pj').innerHTML = `${(atingPJ).toFixed(0)}%<small>Ating.</small>`;
+      $('#fuel-pj').style.height = Math.min(atingPJ,100)+'%';
+      setStatus($('#status-pj'), atingPJ);
 
-        // PJ
-        const metaPJ = parseFloat($('#meta-pj').value)||0;
-        const giro   = parseFloat($('#desembolso-giro').value)||0;
-        const rec    = parseFloat($('#desembolso-recebiveis').value)||0;
-        const realPJ = giro + rec;
-        const atingPJ = metaPJ>0 ? clampPercent((realPJ/metaPJ)*100) : 0;
+      const pPJ = calcPacing(metaPJ, realPJ, startStr, endStr);
+      $('#pj-exp-pct').textContent = pctStr(pPJ.expectedPct);
+      $('#pj-exp-val').textContent = brMoney(pPJ.expectedVal);
+      $('#pj-vel-atual').textContent = isFinite(pPJ.ritmoAtual)? `${brMoney(pPJ.ritmoAtual)}/h` : '—';
+      $('#pj-vel-need').textContent  = isFinite(pPJ.ritmoNecessario)? `${brMoney(pPJ.ritmoNecessario)}/h` : '∞';
+      $('#pj-gap').textContent = isFinite(pPJ.gap)? `${(pPJ.gap>=0?'+':'')}${brMoney(pPJ.gap)}/h` : '—';
+      paintGap($('#pj-gap-box'), pPJ.gap);
 
-        $('#meta-display-pj').textContent = brMoney(metaPJ);
-        $('#realizado-total-pj').textContent = brMoney(realPJ);
-        $('#breakdown-giro').textContent = brMoney(giro);
-        $('#breakdown-recebiveis').textContent = brMoney(rec);
-        $('#progress-pj').style.width = Math.min(atingPJ,100)+'%';
-        $('#progress-text-pj').textContent = pctStr(atingPJ);
-        $('#chip-value-pj').textContent = pctStr(atingPJ);
-        $('#badge-pj').innerHTML = `${(atingPJ).toFixed(0)}%<small>Ating.</small>`;
-        $('#fuel-pj').style.height = Math.min(atingPJ,100)+'%';
-        setStatus($('#status-pj'), atingPJ);
-
-        const pPJ = calcPacing(metaPJ, realPJ, startStr, endStr);
-        $('#pj-exp-pct').textContent = pctStr(pPJ.expectedPct);
-        $('#pj-exp-val').textContent = brMoney(pPJ.expectedVal);
-        $('#pj-vel-atual').textContent = isFinite(pPJ.ritmoAtual)? `${brMoney(pPJ.ritmoAtual)}/h` : '—';
-        $('#pj-vel-need').textContent  = isFinite(pPJ.ritmoNecessario)? `${brMoney(pPJ.ritmoNecessario)}/h` : '∞';
-        $('#pj-gap').textContent = isFinite(pPJ.gap)? `${(pPJ.gap>=0?'+':'')}${brMoney(pPJ.gap)}/h` : '—';
-        paintGap($('#pj-gap-box'), pPJ.gap);
-
-        // PJ Condensado
-        $('#meta-display-pj-condensed').textContent = brMoney(metaPJ);
-        $('#realizado-total-pj-condensed').textContent = brMoney(realPJ);
-        $('#breakdown-giro-condensed').textContent = brMoney(giro);
-        $('#breakdown-recebiveis-condensed').textContent = brMoney(rec);
-        $('#progress-pj-condensed').style.width = Math.min(atingPJ,100)+'%';
-        $('#progress-text-pj-condensed').textContent = pctStr(atingPJ);
-        $('#badge-pj-condensed').innerHTML = `${(atingPJ).toFixed(0)}%<small>Ating.</small>`;
-        setStatus($('#status-pj-condensed'), atingPJ);
-        $('#pj-exp-val-condensed').textContent = brMoney(pPJ.expectedVal);
-        $('#pj-vel-atual-condensed').textContent = isFinite(pPJ.ritmoAtual)? `${brMoney(pPJ.ritmoAtual)}/h` : '—';
-        $('#pj-vel-need-condensed').textContent  = isFinite(pPJ.ritmoNecessario)? `${brMoney(pPJ.ritmoNecessario)}/h` : '∞';
-        $('#pj-gap-condensed').textContent = isFinite(pPJ.gap)? `${(pPJ.gap>=0?'+':'')}${brMoney(pPJ.gap)}/h` : '—';
-        paintGap($('#pj-gap-box-condensed'), pPJ.gap);
-
-      }catch(error){ console.error("Erro crítico ao atualizar o dashboard:", error); }
+      $('#meta-display-pj-condensed').textContent = brMoney(metaPJ);
+      $('#realizado-total-pj-condensed').textContent = brMoney(realPJ);
+      $('#breakdown-giro-condensed').textContent = brMoney(giro);
+      $('#breakdown-recebiveis-condensed').textContent = brMoney(rec);
+      $('#progress-pj-condensed').style.width = Math.min(atingPJ,100)+'%';
+      $('#progress-text-pj-condensed').textContent = pctStr(atingPJ);
+      $('#badge-pj-condensed').innerHTML = `${(atingPJ).toFixed(0)}%<small>Ating.</small>`;
+      setStatus($('#status-pj-condensed'), atingPJ);
+      $('#pj-exp-val-condensed').textContent = brMoney(pPJ.expectedVal);
+      $('#pj-vel-atual-condensed').textContent = isFinite(pPJ.ritmoAtual)? `${brMoney(pPJ.ritmoAtual)}/h` : '—';
+      $('#pj-vel-need-condensed').textContent  = isFinite(pPJ.ritmoNecessario)? `${brMoney(pPJ.ritmoNecessario)}/h` : '∞';
+      $('#pj-gap-condensed').textContent = isFinite(pPJ.gap)? `${(pPJ.gap>=0?'+':'')}${brMoney(pPJ.gap)}/h` : '—';
+      paintGap($('#pj-gap-box-condensed'), pPJ.gap);
     }
 
-    // ===== EXPORTAÇÃO 30% MENOR + MOBILE LAYOUT =====
+    function bindInputs(){
+      ['meta-pf','realizado-consignado','realizado-nao-consignado','meta-pj','desembolso-giro','desembolso-recebiveis','start-time','end-time']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', updateDashboard); });
+    }
+
     async function exportCard(cardId, fileName){
-      try{
-        if (typeof html2canvas === 'undefined') { alert("Biblioteca de exportação não carregada."); return; }
-        const node = document.getElementById(cardId);
-        if (!node) { alert("Card para exportação não encontrado."); return; }
-
-        // Oculta botões e liga modo export
-        document.body.classList.add('export-mode');
-        const btn = node.querySelector('.export-hide');
-        if (btn) btn.style.display = 'none';
-
-        // Aplica shrink somente no card exportado
-        node.classList.add('shrink-30');
-
-        // Aguarda um frame para aplicar estilos
-        await new Promise(r=>requestAnimationFrame(r));
-
-        const canvas = await html2canvas(node,{scale:2,backgroundColor:'#ffffff',useCORS:true});
-
-        // Reverte estados
-        node.classList.remove('shrink-30');
-        if (btn) btn.style.display = '';
-        document.body.classList.remove('export-mode');
-
-        const url = canvas.toDataURL('image/png');
-        const a = document.createElement('a');
-        a.href = url; a.download = `${fileName}.png`; a.click();
-      }catch(error){
-        console.error("Erro ao exportar card:", error);
-        alert("Ocorreu um erro ao exportar a imagem.");
-      }
+      if (typeof html2canvas === 'undefined') { alert("Biblioteca de exportação não carregada."); return; }
+      const node = document.getElementById(cardId);
+      if (!node) { alert("Card para exportação não encontrado."); return; }
+      const btn = node.querySelector('.export-btn'); if (btn) btn.style.display = 'none';
+      await new Promise(r=>requestAnimationFrame(r));
+      const canvas = await html2canvas(node,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+      if (btn) btn.style.display = 'block';
+      const url = canvas.toDataURL('image/png');
+      const a = document.createElement('a'); a.href = url; a.download = `${fileName}.png`; a.click();
     }
     async function exportAll(){
       await exportCard('card-pf','Credito_PF');
@@ -739,18 +725,11 @@
       await exportCard('card-pj-condensed','Credito_PJ_Condensado');
     }
 
-    function bindInputs(){
-      ['meta-pf','realizado-consignado','realizado-nao-consignado','meta-pj','desembolso-giro','desembolso-recebiveis','start-time','end-time']
-      .forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('input', updateDashboard); });
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
-      try{
-        changePalette('royal');
-        bindInputs();
-        updateDashboard();
-        setInterval(updateDashboard, 30000);
-      }catch(error){ console.error("Erro na inicialização:", error); }
+      changePalette('royal');
+      bindInputs();
+      updateDashboard();
+      setInterval(updateDashboard, 30000);
     });
   </script>
 </body>
