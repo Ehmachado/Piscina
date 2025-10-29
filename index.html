@@ -1,5 +1,3 @@
-Aqui está o código completo com apenas a redução extra de 10% no campo META (o primeiro bloco dentro de .values). Mantive tudo o resto intocado. Adicionei um pequeno override no final do CSS para aplicar a nova redução (de 12.96px→11.664px e de 28.08px→25.272px). O tanque de combustível permanece inalterado.
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -366,7 +364,7 @@ Aqui está o código completo com apenas a redução extra de 10% no campo META 
     }
     
     /* ===== AJUSTES JÁ EXISTENTES ===== */
-    /* FALTA – já estava -20% acumulado (10%+10%) no código anterior */
+    /* FALTA – -20% acumulado anteriormente */
     .falta-container{
       margin:6px 0;
       padding:15.552px 17.82px;
@@ -391,9 +389,9 @@ Aqui está o código completo com apenas a redução extra de 10% no campo META 
       color:#fff;
       text-shadow:0 3px 6px rgba(0,0,0,.4);
     }
-    /* META – estava -10% no código anterior (12.96px e 28.08px) */
-    .values .value-item:first-child .value-label{ font-size:12.96px; }
-    .values .value-item:first-child .value-amount{ font-size:28.08px; }
+    /* META – -20% acumulado anteriormente */
+    .values .value-item:first-child .value-label{ font-size:11.664px; }
+    .values .value-item:first-child .value-amount{ font-size:25.272px; }
     
     .percent-badge{
       position:absolute;
@@ -428,10 +426,10 @@ Aqui está o código completo com apenas a redução extra de 10% no campo META 
       display:flex;
       align-items:center;
       gap:15px;
-      padding:19.44px 23.4px;   /* já -10% aplicado antes */
+      padding:19.44px 23.4px;   /* -10% aplicado antes */
       background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);
       border-radius:16px;
-      border:3.6px solid #dee2e6; /* já -10% aplicado antes */
+      border:3.6px solid #dee2e6; /* -10% aplicado antes */
       margin:9.6px 0;
       box-shadow:0 6px 18px rgba(0,0,0,.12);
     }
@@ -692,9 +690,13 @@ Aqui está o código completo com apenas a redução extra de 10% no campo META 
       .input-grid{grid-template-columns:1fr}
     }
 
-    /* ===== AJUSTE SOLICITADO AGORA: META -10% ADICIONAL ===== */
-    .values .value-item:first-child .value-label{ font-size:11.664px; }   /* 12.96px -> -10% */
-    .values .value-item:first-child .value-amount{ font-size:25.272px; } /* 28.08px -> -10% */
+    /* ===== AJUSTES SOLICITADOS AGORA ===== */
+    /* Realizado (-10% no segundo item de .values) */
+    .values .value-item:last-child .value-label{ font-size:12.96px; }   /* 14.4px -> -10% */
+    .values .value-item:last-child .value-amount{ font-size:28.08px; } /* 31.2px -> -10% */
+
+    /* Desembolso Giro, Recebíveis, Consignado e Não Consignado (-10% nos valores) */
+    .breakdown-value{ font-size:22.68px; } /* 25.2px -> -10% */
   </style>
 </head>
 <body>
