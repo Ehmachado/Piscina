@@ -1080,9 +1080,8 @@
       const button = node.querySelector('.export-btn');
       const badge = node.querySelector('.percent-badge');
       
-      // Ocultar elementos que não devem aparecer na exportação
+      // Apenas ocultar o botão de exportar, manter o badge visível
       button.style.display = 'none';
-      badge.style.display = 'none';
       
       // Aguardar para garantir que as mudanças foram aplicadas
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -1097,19 +1096,37 @@
         useCORS: true,
         allowTaint: true,
         logging: false,
-        backgroundColor: '#ffffff',
+        backgroundColor: null,
         windowWidth: node.scrollWidth,
         windowHeight: node.scrollHeight,
         width: node.offsetWidth,
         height: node.offsetHeight
       });
       
+      // Criar canvas final com fundo do card (sem cantos brancos)
+      const finalCanvas = document.createElement('canvas');
+      const ctx = finalCanvas.getContext('2d');
+      finalCanvas.width = canvas.width;
+      finalCanvas.height = canvas.height;
+      
+      // Obter a cor de fundo do card
+      const computedStyle = window.getComputedStyle(node);
+      const bgColor = computedStyle.background || computedStyle.backgroundColor;
+      
+      // Aplicar o fundo do card
+      if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
+        ctx.fillStyle = bgColor;
+        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      }
+      
+      // Desenhar o card capturado
+      ctx.drawImage(canvas, 0, 0);
+      
       // Restaurar elementos ocultos
       button.style.display = 'block';
-      badge.style.display = 'flex';
       
       // Download da imagem
-      const url = canvas.toDataURL('image/png', 1.0);
+      const url = finalCanvas.toDataURL('image/png', 1.0);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${fileName}.png`;
