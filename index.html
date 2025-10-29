@@ -152,9 +152,10 @@
       padding:25px;
       box-shadow:0 35px 90px rgba(0,0,0,.4);
       position:relative;
-      overflow:hidden;
+      overflow:visible;
       transition:.4s;
       max-width:650px;
+      width:650px;
       height:1050px;
     }
     
@@ -190,9 +191,6 @@
       padding:28px;
       position:relative;
       background:transparent;
-      height:100%;
-      display:flex;
-      flex-direction:column;
     }
     
     .card-header{
@@ -1087,55 +1085,29 @@
       badge.style.display = 'none';
       
       // Aguardar para garantir que as mudanças foram aplicadas
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 150));
       
-      // Obter posição e dimensões reais do card
-      const rect = node.getBoundingClientRect();
-      const width = 650; // Largura fixa
-      const height = 1050; // Altura fixa
-      
-      // Capturar com as dimensões fixas do elemento
+      // Capturar o card completo
       const canvas = await html2canvas(node, {
         scale: 2,
-        backgroundColor: null,
         useCORS: true,
-        width: width,
-        height: height,
-        windowWidth: width,
-        windowHeight: height,
-        x: rect.left,
-        y: rect.top,
-        scrollX: -window.scrollX,
-        scrollY: -window.scrollY,
-        logging: false,
         allowTaint: true,
-        foreignObjectRendering: false
+        logging: false,
+        backgroundColor: null
       });
-      
-      // Criar um canvas temporário para remover áreas transparentes/brancas
-      const tempCanvas = document.createElement('canvas');
-      const ctx = tempCanvas.getContext('2d');
-      tempCanvas.width = canvas.width;
-      tempCanvas.height = canvas.height;
-      
-      // Preencher com a cor de fundo do card antes de desenhar
-      const computedStyle = window.getComputedStyle(node);
-      ctx.fillStyle = computedStyle.backgroundColor || '#ffffff';
-      ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
-      
-      // Desenhar o canvas capturado por cima
-      ctx.drawImage(canvas, 0, 0);
       
       // Restaurar elementos ocultos
       button.style.display = 'block';
       badge.style.display = 'flex';
       
       // Download da imagem
-      const url = tempCanvas.toDataURL('image/png');
+      const url = canvas.toDataURL('image/png', 1.0);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${fileName}.png`;
+      document.body.appendChild(a);
       a.click();
+      document.body.removeChild(a);
     }
     
     changePalette('royal');
