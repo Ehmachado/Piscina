@@ -231,28 +231,8 @@
       box-shadow:0 15px 40px rgba(102,126,234,.8);
     }
     
-    .percent-chip{
-      display:inline-flex;
-      align-items:center;
-      gap:14.4px;
-      padding:16.8px 26.4px;
-      border-radius:999px;
-      font-weight:900;
-      letter-spacing:1.2px;
-      font-size:21.6px;
-      margin-bottom:7.2px;
-      background:#eef2ff;
-      color:#111827;
-      border:4.8px solid #e5e7eb;
-      box-shadow:0 7.2px 21.6px rgba(0,0,0,.15);
-    }
-    
-    .percent-chip span{
-      display:inline-block;
-      font-weight:900;
-      color:#111827;
-      font-size:21.6px;
-    }
+    /* ===== ELIMINAR CAMPO "ATINGIMENTO" ===== */
+    .percent-chip{ display:none !important; }
     
     .progress-bar-container{
       width:100%;
@@ -280,7 +260,7 @@
       animation:shimmer 2.5s infinite;
     }
     
-    /* Cores dinâmicas da barra de progresso */
+    /* Cores dinâmicas */
     .progress-bar.danger{background:linear-gradient(90deg,#dc3545 0%,#c82333 50%,#dc3545 100%);box-shadow:0 0 35px rgba(220,53,69,.8)}
     .progress-bar.warning{background:linear-gradient(90deg,#ffc107 0%,#e0a800 50%,#ffc107 100%);box-shadow:0 0 35px rgba(255,193,7,.8)}
     .progress-bar.success{background:linear-gradient(90deg,#28a745 0%,#218838 50%,#28a745 100%);box-shadow:0 0 35px rgba(40,167,69,.8)}
@@ -363,35 +343,18 @@
       color:#2c3e50;
     }
     
-    /* ===== AJUSTES JÁ EXISTENTES ===== */
-    /* FALTA – -20% acumulado anteriormente */
+    /* Campo FALTA */
     .falta-container{
       margin:6px 0;
-      padding:15.552px 17.82px;
+      padding:19.2px 22px;
       background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);
       border-radius:16px;
-      border:3.24px solid #bd2130;
+      border:4px solid #bd2130;
       box-shadow:0 6px 20px rgba(220,53,69,.35);
       text-align:center;
     }
-    .falta-label{
-      font-size:11.34px;
-      color:#fff;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:2px;
-      margin-bottom:6px;
-      text-shadow:0 2px 4px rgba(0,0,0,.3);
-    }
-    .falta-value{
-      font-size:27.216px;
-      font-weight:900;
-      color:#fff;
-      text-shadow:0 3px 6px rgba(0,0,0,.4);
-    }
-    /* META – -20% acumulado anteriormente */
-    .values .value-item:first-child .value-label{ font-size:11.664px; }
-    .values .value-item:first-child .value-amount{ font-size:25.272px; }
+    .falta-label{font-size:14px;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;text-shadow:0 2px 4px rgba(0,0,0,.3)}
+    .falta-value{font-size:33.6px;font-weight:900;color:#fff;text-shadow:0 3px 6px rgba(0,0,0,.4)}
     
     .percent-badge{
       position:absolute;
@@ -412,68 +375,57 @@
       text-shadow:0 2px 4px rgba(0,0,0,.1);
       border:5px solid #667eea;
     }
-    
-    .percent-badge small{
-      display:block;
-      font-size:12px;
-      letter-spacing:0.5px;
-      color:#667eea;
-      margin-top:4px;
-      font-weight:900;
-    }
+    .percent-badge small{display:block;font-size:12px;letter-spacing:.5px;color:#667eea;margin-top:4px;font-weight:900}
     
     .speedometer{
       display:flex;
       align-items:center;
       gap:15px;
-      padding:19.44px 23.4px;   /* -10% aplicado antes */
+      padding:21.6px 26px;
       background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);
       border-radius:16px;
-      border:3.6px solid #dee2e6; /* -10% aplicado antes */
+      border:4px solid #dee2e6;
       margin:9.6px 0;
       box-shadow:0 6px 18px rgba(0,0,0,.12);
     }
-    .speedometer-icon{font-size:36px}
+    .speedometer-icon{font-size:40px}
     .speedometer-content{flex:1}
-    .speedometer-label{font-size:12.96px;color:#666;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
-    .speedometer-value{font-size:23.76px;font-weight:900;color:#2c3e50}
-    .speedometer-status{
-      display:inline-block;padding:5.4px 14.4px;border-radius:18px;font-size:10.8px;font-weight:900;margin-top:7.2px;text-transform:uppercase;letter-spacing:0.8px
-    }
-    .speedometer-status.ahead{background:#d4edda;color:#155724;border:3.6px solid #28a745}
-    .speedometer-status.ontrack{background:#fff3cd;color:#856404;border:3.6px solid #ffc107}
-    .speedometer-status.behind{background:#f8d7da;color:#721c24;border:3.6px solid #dc3545}
+    .speedometer-label{font-size:14.4px;color:#666;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+    .speedometer-value{font-size:26.4px;font-weight:900;color:#2c3e50}
+    .speedometer-status{display:inline-block;padding:6px 16px;border-radius:20px;font-size:12px;font-weight:900;margin-top:8px;text-transform:uppercase;letter-spacing:0.8px}
+    .speedometer-status.ahead{background:#d4edda;color:#155724;border:4px solid #28a745}
+    .speedometer-status.ontrack{background:#fff3cd;color:#856404;border:4px solid #ffc107}
+    .speedometer-status.behind{background:#f8d7da;color:#721c24;border:4px solid #dc3545}
     
-    .fuel-scene{
-      height:180px;
+    /* ===== AUMENTAR A BATERIA (TANQUE) EM 20% ===== */
+    .fuel-scene{              /* altura da área para acomodar o tanque maior */
+      height:216px;           /* 180px → +20% = 216px */
       display:flex;
       align-items:center;
       justify-content:center;
       position:relative;
       padding:6px;
     }
-    
     .fuel-container{
       position:relative;
-      width:120px;
-      height:174px;
+      width:144px;            /* 120px → +20% */
+      height:209px;           /* 174px → +20% (208.8 arredondado) */
       animation:fuel-float 4s ease-in-out infinite;
     }
-    
-    @keyframes fuel-float{
-      0%,100%{transform:translateY(0px)}
-      50%{transform:translateY(-6px)}
-    }
-    
     .fuel-tank{
-      width:120px;
-      height:174px;
+      width:144px;            /* 120px → +20% */
+      height:209px;           /* 174px → +20% */
       background:linear-gradient(145deg,#e2e8f0 0%,#cbd5e1 50%,#94a3b8 100%);
       border-radius:16px;
       position:relative;
       border:4px solid #64748b;
       overflow:hidden;
       box-shadow:0 20px 50px rgba(0,0,0,.4),inset 0 0 40px rgba(255,255,255,.25);
+    }
+    
+    @keyframes fuel-float{
+      0%,100%{transform:translateY(0px)}
+      50%{transform:translateY(-6px)}
     }
     
     .fuel-label{
@@ -511,7 +463,6 @@
       justify-content:space-between;
       z-index:5;
     }
-    
     .level-mark{
       width:100%;
       height:2px;
@@ -520,7 +471,6 @@
       position:relative;
       box-shadow:0 1px 2px rgba(0,0,0,.3);
     }
-    
     .level-mark::after{
       content:'';
       position:absolute;
@@ -549,7 +499,6 @@
       overflow:hidden;
       border-radius:0 0 16px 16px;
     }
-    
     .coins-layer{
       position:absolute;
       width:100%;
@@ -568,18 +517,9 @@
         radial-gradient(circle at 90% 65%,#f39c12 0%,transparent 7%);
       animation:coins-shimmer 3s ease-in-out infinite;
     }
+    @keyframes coins-shimmer{0%,100%{opacity:.92}50%{opacity:1}}
     
-    @keyframes coins-shimmer{
-      0%,100%{opacity:.92}
-      50%{opacity:1}
-    }
-    
-    .bills-layer{
-      position:absolute;
-      width:100%;
-      height:100%;
-    }
-    
+    .bills-layer{position:absolute;width:100%;height:100%}
     .bill{
       position:absolute;
       width:32px;
@@ -590,24 +530,18 @@
       box-shadow:0 3px 8px rgba(0,0,0,.35);
       animation:bill-float 6s ease-in-out infinite;
     }
-    
     .bill::before{
       content:'$';
       position:absolute;
-      top:50%;
-      left:50%;
+      top:50%;left:50%;
       transform:translate(-50%,-50%);
-      font-size:11px;
-      font-weight:900;
-      color:#f4d03f;
+      font-size:11px;font-weight:900;color:#f4d03f;
       text-shadow:0 1px 3px rgba(0,0,0,.35);
     }
-    
     .bill:nth-child(1){left:15%;bottom:35%;animation-delay:0s}
     .bill:nth-child(2){left:40%;bottom:55%;animation-delay:1.2s}
     .bill:nth-child(3){left:65%;bottom:25%;animation-delay:.6s}
     .bill:nth-child(4){left:80%;bottom:45%;animation-delay:1.8s}
-    
     @keyframes bill-float{
       0%,100%{transform:translateY(0) rotate(0deg)}
       25%{transform:translateY(-10px) rotate(5deg)}
@@ -617,9 +551,7 @@
     
     .money-surface{
       position:absolute;
-      top:-6px;
-      left:0;
-      right:0;
+      top:-6px;left:0;right:0;
       height:12px;
       background:linear-gradient(90deg,
         rgba(255,255,255,.45) 0%,
@@ -629,18 +561,12 @@
       border-radius:50%;
       animation:surface-ripple 3s ease-in-out infinite;
     }
-    
-    @keyframes surface-ripple{
-      0%,100%{transform:scaleX(1) translateY(0)}
-      50%{transform:scaleX(1.05) translateY(-4px)}
-    }
+    @keyframes surface-ripple{0%,100%{transform:scaleX(1) translateY(0)}50%{transform:scaleX(1.05) translateY(-4px)}}
     
     .money-shine{
       position:absolute;
-      top:-120%;
-      left:-60%;
-      width:220%;
-      height:220%;
+      top:-120%;left:-60%;
+      width:220%;height:220%;
       background:linear-gradient(135deg,
         transparent 0%,
         rgba(255,255,255,.35) 46%,
@@ -650,16 +576,10 @@
       );
       animation:shine-move 5s infinite;
     }
-    
-    @keyframes shine-move{
-      0%{transform:translate(-100%,-100%)}
-      100%{transform:translate(120%,120%)}
-    }
+    @keyframes shine-move{0%{transform:translate(-100%,-100%)}100%{transform:translate(120%,120%)}}
     
     .money-glow{
-      position:absolute;
-      width:100%;
-      height:100%;
+      position:absolute;width:100%;height:100%;
       background:radial-gradient(ellipse at center bottom,
         rgba(244,208,63,.7) 0%,
         rgba(243,156,18,.45) 50%,
@@ -667,6 +587,7 @@
       );
       animation:glow-pulse 3.5s ease-in-out infinite;
     }
+    @keyframes glow-pulse{0%,100%{opacity:.7}50%{opacity:1}}
     
     .status-badge{
       display:inline-block;
@@ -679,7 +600,6 @@
       letter-spacing:2px;
       box-shadow:0 8px 24px rgba(0,0,0,.24);
     }
-    
     .status-success{background:linear-gradient(135deg,#d4edda 0%,#b8e0c5 100%);color:#155724;border:5px solid #28a745}
     .status-warning{background:linear-gradient(135deg,#fff3cd 0%,#ffeaa7 100%);color:#856404;border:5px solid #ffc107}
     .status-danger{background:linear-gradient(135deg,#f8d7da 0%,#f5c6cb 100%);color:#721c24;border:5px solid #dc3545}
@@ -689,14 +609,6 @@
       .palette-selector{grid-template-columns:1fr}
       .input-grid{grid-template-columns:1fr}
     }
-
-    /* ===== AJUSTES SOLICITADOS AGORA ===== */
-    /* Realizado (-10% no segundo item de .values) */
-    .values .value-item:last-child .value-label{ font-size:12.96px; }   /* 14.4px -> -10% */
-    .values .value-item:last-child .value-amount{ font-size:28.08px; } /* 31.2px -> -10% */
-
-    /* Desembolso Giro, Recebíveis, Consignado e Não Consignado (-10% nos valores) */
-    .breakdown-value{ font-size:22.68px; } /* 25.2px -> -10% */
   </style>
 </head>
 <body>
@@ -773,6 +685,7 @@
             <button class="export-btn" onclick="exportCard('card-pf','Credito_PF')">📸 Exportar</button>
           </div>
           
+          <!-- Atingimento oculto via CSS -->
           <div class="percent-chip" id="chip-pf">Atingimento: <span style="margin-left:10px" id="chip-value-pf">0%</span></div>
           
           <div class="progress-bar-container">
@@ -781,7 +694,6 @@
             </div>
           </div>
           
-          <!-- Campo FALTA -->
           <div class="falta-container" id="falta-pf">
             <div class="falta-label">🎯 FALTA</div>
             <div class="falta-value" id="falta-value-pf">R$ 0</div>
@@ -859,6 +771,7 @@
             <button class="export-btn" onclick="exportCard('card-pj','Credito_PJ')">📸 Exportar</button>
           </div>
           
+          <!-- Atingimento oculto via CSS -->
           <div class="percent-chip" id="chip-pj">Atingimento: <span style="margin-left:10px" id="chip-value-pj">0%</span></div>
           
           <div class="progress-bar-container">
@@ -867,7 +780,6 @@
             </div>
           </div>
           
-          <!-- Campo FALTA -->
           <div class="falta-container" id="falta-pj">
             <div class="falta-label">🎯 FALTA</div>
             <div class="falta-value" id="falta-value-pj">R$ 0</div>
@@ -1024,7 +936,6 @@
       progPF.style.width = Math.min(pPF,100)+'%';
       setProgressBarColor(progPF, pPF);
       document.getElementById('progress-text-pf').textContent = pct(pPF);
-      document.getElementById('chip-value-pf').textContent = pct(pPF);
       document.getElementById('badge-pf').innerHTML = `${(pPF).toFixed(0)}%<small>Ating.</small>`;
       document.getElementById('fuel-pf').style.height = Math.min(pPF,100)+'%';
       updateSpeedometer('pf', realPF, metaPF);
@@ -1047,7 +958,6 @@
       progPJ.style.width = Math.min(pPJ,100)+'%';
       setProgressBarColor(progPJ, pPJ);
       document.getElementById('progress-text-pj').textContent = pct(pPJ);
-      document.getElementById('chip-value-pj').textContent = pct(pPJ);
       document.getElementById('badge-pj').innerHTML = `${(pPJ).toFixed(0)}%<small>Ating.</small>`;
       document.getElementById('fuel-pj').style.height = Math.min(pPJ,100)+'%';
       updateSpeedometer('pj', realPJ, metaPJ);
@@ -1066,21 +976,41 @@
     async function exportCard(cardId, fileName){
       const node = document.getElementById(cardId);
       const button = node.querySelector('.export-btn');
+      
+      // Ocultar o botão de exportar
       button.style.display = 'none';
+      
+      // Aguardar renderização
       await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Parâmetros do html2canvas
+      const scale = 3;
       const canvas = await html2canvas(node, {
-        scale: 3, useCORS: true, allowTaint: true, logging: false, backgroundColor: null
+        scale,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: null
       });
+      
+      // Criar canvas final com clipping arredondado calculado dinamicamente
       const finalCanvas = document.createElement('canvas');
       const ctx = finalCanvas.getContext('2d');
       finalCanvas.width = canvas.width;
       finalCanvas.height = canvas.height;
+      
       ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
       ctx.save();
-      ctx.beginPath();
-      const radius = 90;
+      
+      // Descobre o border-radius real do card e aplica o mesmo raio (em px) multiplicado pelo scale
+      const computed = getComputedStyle(node);
+      const br = parseFloat(computed.borderTopLeftRadius) || 30; // fallback 30px
+      const radius = Math.max(0, br * scale);
       const w = canvas.width;
       const h = canvas.height;
+
+      // Path com cantos arredondados
+      ctx.beginPath();
       ctx.moveTo(radius, 0);
       ctx.lineTo(w - radius, 0);
       ctx.arcTo(w, 0, w, radius, radius);
@@ -1091,14 +1021,22 @@
       ctx.lineTo(0, radius);
       ctx.arcTo(0, 0, radius, 0, radius);
       ctx.closePath();
-      ctx.clip();
+      
+      ctx.clip();                 // recorta exatamente no raio do card
       ctx.drawImage(canvas, 0, 0);
       ctx.restore();
+      
+      // Restaurar botão
       button.style.display = 'block';
+      
+      // Download da imagem
       const url = finalCanvas.toDataURL('image/png', 1.0);
       const a = document.createElement('a');
-      a.href = url; a.download = `${fileName}.png`;
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      a.href = url;
+      a.download = `${fileName}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
     
     changePalette('royal');
