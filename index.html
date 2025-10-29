@@ -247,6 +247,13 @@
       box-shadow:0 6px 18px rgba(0,0,0,.15);
     }
     
+    .percent-chip span{
+      display:inline-block;
+      font-weight:900;
+      color:#111827;
+      font-size:18px;
+    }
+    
     .progress-bar-container{
       width:100%;
       height:45px;
@@ -1078,32 +1085,33 @@
     async function exportCard(cardId, fileName){
       const node = document.getElementById(cardId);
       const button = node.querySelector('.export-btn');
-      const badge = node.querySelector('.percent-badge');
       
-      // Apenas ocultar o botão de exportar, manter o badge visível
+      // Apenas ocultar o botão de exportar, manter tudo mais visível
+      const originalButtonDisplay = button.style.display;
       button.style.display = 'none';
       
+      // Forçar repaint
+      node.offsetHeight;
+      
       // Aguardar para garantir que as mudanças foram aplicadas
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 300));
       
-      // Forçar scroll para garantir que o card está visível
-      node.scrollIntoView({ behavior: 'instant', block: 'start' });
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Capturar o card completo com configurações otimizadas
+      // Capturar o card completo
       const canvas = await html2canvas(node, {
-        scale: 2,
+        scale: 3,
         useCORS: true,
         allowTaint: true,
         logging: false,
         backgroundColor: null,
-        windowWidth: node.scrollWidth,
-        windowHeight: node.scrollHeight,
-        width: node.offsetWidth,
-        height: node.offsetHeight
+        imageTimeout: 0,
+        removeContainer: true,
+        foreignObjectRendering: true,
+        ignoreElements: function(element) {
+          return false;
+        }
       });
       
-      // Criar canvas final com fundo do card (sem cantos brancos)
+      // Criar canvas final com fundo do card
       const finalCanvas = document.createElement('canvas');
       const ctx = finalCanvas.getContext('2d');
       finalCanvas.width = canvas.width;
@@ -1111,19 +1119,33 @@
       
       // Obter a cor de fundo do card
       const computedStyle = window.getComputedStyle(node);
-      const bgColor = computedStyle.background || computedStyle.backgroundColor;
+      const bgImage = computedStyle.backgroundImage;
+      const bgColor = computedStyle.backgroundColor;
       
       // Aplicar o fundo do card
-      if (bgColor && bgColor !== 'rgba(0, 0, 0, 0)') {
-        ctx.fillStyle = bgColor;
-        ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
+      if (bgImage && bgImage !== 'none') {
+        // Tentar extrair as cores do gradiente
+        const match = bgImage.match(/linear-gradient\([^)]+\)/);
+        if (match) {
+          const gradient = ctx.createLinearGradient(0, 0, finalCanvas.width, finalCanvas.height);
+          // Fallback para cores aproximadas
+          gradient.addColorStop(0, '#f0f3ff');
+          gradient.addColorStop(1, '#e8edff');
+          ctx.fillStyle = gradient;
+        } else {
+          ctx.fillStyle = bgColor || '#ffffff';
+        }
+      } else {
+        ctx.fillStyle = bgColor || '#ffffff';
       }
+      
+      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
       
       // Desenhar o card capturado
       ctx.drawImage(canvas, 0, 0);
       
-      // Restaurar elementos ocultos
-      button.style.display = 'block';
+      // Restaurar botão
+      button.style.display = originalButtonDisplay;
       
       // Download da imagem
       const url = finalCanvas.toDataURL('image/png', 1.0);
