@@ -1,3 +1,5 @@
+Aqui está o código completo com apenas a redução extra de 10% no campo META (o primeiro bloco dentro de .values). Mantive tudo o resto intocado. Adicionei um pequeno override no final do CSS para aplicar a nova redução (de 12.96px→11.664px e de 28.08px→25.272px). O tanque de combustível permanece inalterado.
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -103,7 +105,7 @@
     }
     
     label{
-      font-size:16px;
+      font-size:19.2px;
       color:#555;
       font-weight:800;
       text-transform:uppercase;
@@ -111,10 +113,10 @@
     }
     
     input{
-      padding:18px;
+      padding:21.6px;
       border:4px solid #ddd;
       border-radius:14px;
-      font-size:22px;
+      font-size:26.4px;
       font-weight:700;
       transition:.3s;
       background:#fff;
@@ -128,7 +130,7 @@
     
     .input-subgroup{
       background:#ffffffdd;
-      padding:22px;
+      padding:26.4px;
       border-radius:16px;
       margin-bottom:20px;
       border:4px dashed #adb5bd;
@@ -152,7 +154,7 @@
       padding:25px;
       box-shadow:0 35px 90px rgba(0,0,0,.4);
       position:relative;
-      overflow:visible;
+      overflow:hidden;
       transition:.4s;
       max-width:650px;
       width:650px;
@@ -201,29 +203,29 @@
     }
     
     .card-title{
-      font-size:38px;
+      font-size:50px;
       font-weight:900;
       color:#2c3e50;
       display:flex;
       align-items:center;
-      gap:15px;
+      gap:20px;
       text-transform:uppercase;
-      letter-spacing:2px;
+      letter-spacing:2.6px;
     }
     
     .export-btn{
       background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
       color:#fff;
       border:none;
-      padding:12px 24px;
-      border-radius:12px;
+      padding:14.4px 28.8px;
+      border-radius:14.4px;
       cursor:pointer;
-      font-size:14px;
+      font-size:16.8px;
       font-weight:900;
       transition:.3s;
       box-shadow:0 10px 30px rgba(102,126,234,.6);
       text-transform:uppercase;
-      letter-spacing:1px;
+      letter-spacing:1.2px;
     }
     
     .export-btn:hover{
@@ -234,36 +236,36 @@
     .percent-chip{
       display:inline-flex;
       align-items:center;
-      gap:12px;
-      padding:14px 22px;
+      gap:14.4px;
+      padding:16.8px 26.4px;
       border-radius:999px;
       font-weight:900;
-      letter-spacing:1px;
-      font-size:18px;
-      margin-bottom:6px;
+      letter-spacing:1.2px;
+      font-size:21.6px;
+      margin-bottom:7.2px;
       background:#eef2ff;
       color:#111827;
-      border:4px solid #e5e7eb;
-      box-shadow:0 6px 18px rgba(0,0,0,.15);
+      border:4.8px solid #e5e7eb;
+      box-shadow:0 7.2px 21.6px rgba(0,0,0,.15);
     }
     
     .percent-chip span{
       display:inline-block;
       font-weight:900;
       color:#111827;
-      font-size:18px;
+      font-size:21.6px;
     }
     
     .progress-bar-container{
       width:100%;
-      height:45px;
+      height:54px;
       background:linear-gradient(135deg,#e9ecef 0%,#dee2e6 100%);
-      border-radius:30px;
+      border-radius:36px;
       overflow:hidden;
       position:relative;
-      margin:6px 0 8px;
-      border:4px solid rgba(0,0,0,.08);
-      box-shadow:inset 0 4px 12px rgba(0,0,0,.2);
+      margin:7.2px 0 9.6px;
+      border:4.8px solid rgba(0,0,0,.08);
+      box-shadow:inset 0 4.8px 14.4px rgba(0,0,0,.2);
     }
     
     .progress-bar{
@@ -280,7 +282,7 @@
       animation:shimmer 2.5s infinite;
     }
     
-    /* Cores dinâmicas da barra de progresso com gradiente progressivo */
+    /* Cores dinâmicas da barra de progresso */
     .progress-bar.danger{background:linear-gradient(90deg,#dc3545 0%,#c82333 50%,#dc3545 100%);box-shadow:0 0 35px rgba(220,53,69,.8)}
     .progress-bar.warning{background:linear-gradient(90deg,#ffc107 0%,#e0a800 50%,#ffc107 100%);box-shadow:0 0 35px rgba(255,193,7,.8)}
     .progress-bar.success{background:linear-gradient(90deg,#28a745 0%,#218838 50%,#28a745 100%);box-shadow:0 0 35px rgba(40,167,69,.8)}
@@ -295,16 +297,16 @@
     .progress-text{
       color:#fff;
       font-weight:900;
-      font-size:17px;
-      text-shadow:0 3px 6px rgba(0,0,0,.5);
+      font-size:20.4px;
+      text-shadow:0 3.6px 7.2px rgba(0,0,0,.5);
       z-index:1;
     }
     
     .values{
       display:flex;
       justify-content:space-around;
-      margin:8px 0;
-      padding:20px;
+      margin:9.6px 0;
+      padding:24px;
       background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);
       border-radius:16px;
       border:3px solid #dee2e6;
@@ -315,7 +317,7 @@
     
     .value-label{
       color:#666;
-      font-size:12px;
+      font-size:14.4px;
       margin-bottom:8px;
       text-transform:uppercase;
       letter-spacing:2px;
@@ -324,7 +326,7 @@
     
     .value-amount{
       font-weight:900;
-      font-size:26px;
+      font-size:31.2px;
       color:#2c3e50;
       text-shadow:0 2px 4px rgba(0,0,0,.1);
     }
@@ -333,7 +335,7 @@
       display:flex;
       gap:16px;
       margin:6px 0 4px;
-      padding:16px;
+      padding:19.2px;
       background:rgba(0,0,0,.05);
       border-radius:14px;
     }
@@ -341,7 +343,7 @@
     .breakdown-item{
       flex:1;
       text-align:center;
-      padding:16px;
+      padding:19.2px;
       background:#fff;
       border-radius:12px;
       border:3px solid #e9ecef;
@@ -349,7 +351,7 @@
     }
     
     .breakdown-label{
-      font-size:11px;
+      font-size:12px;
       color:#6c757d;
       text-transform:uppercase;
       letter-spacing:1px;
@@ -358,24 +360,24 @@
     }
     
     .breakdown-value{
-      font-size:21px;
+      font-size:25.2px;
       font-weight:900;
       color:#2c3e50;
     }
     
-    /* Novo campo FALTA */
+    /* ===== AJUSTES JÁ EXISTENTES ===== */
+    /* FALTA – já estava -20% acumulado (10%+10%) no código anterior */
     .falta-container{
       margin:6px 0;
-      padding:16px 22px;
+      padding:15.552px 17.82px;
       background:linear-gradient(135deg,#dc3545 0%,#c82333 100%);
       border-radius:16px;
-      border:4px solid #bd2130;
+      border:3.24px solid #bd2130;
       box-shadow:0 6px 20px rgba(220,53,69,.35);
       text-align:center;
     }
-    
     .falta-label{
-      font-size:13px;
+      font-size:11.34px;
       color:#fff;
       font-weight:900;
       text-transform:uppercase;
@@ -383,13 +385,15 @@
       margin-bottom:6px;
       text-shadow:0 2px 4px rgba(0,0,0,.3);
     }
-    
     .falta-value{
-      font-size:28px;
+      font-size:27.216px;
       font-weight:900;
       color:#fff;
       text-shadow:0 3px 6px rgba(0,0,0,.4);
     }
+    /* META – estava -10% no código anterior (12.96px e 28.08px) */
+    .values .value-item:first-child .value-label{ font-size:12.96px; }
+    .values .value-item:first-child .value-amount{ font-size:28.08px; }
     
     .percent-badge{
       position:absolute;
@@ -399,13 +403,13 @@
       align-items:center;
       justify-content:center;
       flex-direction:column;
-      width:100px;
-      height:100px;
+      width:110px;
+      height:110px;
       border-radius:50%;
       background:linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
       box-shadow:0 15px 50px rgba(0,0,0,.3), inset 0 0 0 8px #e5e7eb;
       font-weight:900;
-      font-size:26px;
+      font-size:31.2px;
       color:#1a1a2e;
       text-shadow:0 2px 4px rgba(0,0,0,.1);
       border:5px solid #667eea;
@@ -413,7 +417,7 @@
     
     .percent-badge small{
       display:block;
-      font-size:11px;
+      font-size:12px;
       letter-spacing:0.5px;
       color:#667eea;
       margin-top:4px;
@@ -424,47 +428,23 @@
       display:flex;
       align-items:center;
       gap:15px;
-      padding:18px 26px;
+      padding:19.44px 23.4px;   /* já -10% aplicado antes */
       background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);
       border-radius:16px;
-      border:4px solid #dee2e6;
-      margin:8px 0;
+      border:3.6px solid #dee2e6; /* já -10% aplicado antes */
+      margin:9.6px 0;
       box-shadow:0 6px 18px rgba(0,0,0,.12);
     }
-    
     .speedometer-icon{font-size:36px}
-    
     .speedometer-content{flex:1}
-    
-    .speedometer-label{
-      font-size:12px;
-      color:#666;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:1.5px;
-      margin-bottom:6px;
-    }
-    
-    .speedometer-value{
-      font-size:22px;
-      font-weight:900;
-      color:#2c3e50;
-    }
-    
+    .speedometer-label{font-size:12.96px;color:#666;font-weight:900;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+    .speedometer-value{font-size:23.76px;font-weight:900;color:#2c3e50}
     .speedometer-status{
-      display:inline-block;
-      padding:6px 16px;
-      border-radius:20px;
-      font-size:11px;
-      font-weight:900;
-      margin-top:8px;
-      text-transform:uppercase;
-      letter-spacing:0.8px;
+      display:inline-block;padding:5.4px 14.4px;border-radius:18px;font-size:10.8px;font-weight:900;margin-top:7.2px;text-transform:uppercase;letter-spacing:0.8px
     }
-    
-    .speedometer-status.ahead{background:#d4edda;color:#155724;border:4px solid #28a745}
-    .speedometer-status.ontrack{background:#fff3cd;color:#856404;border:4px solid #ffc107}
-    .speedometer-status.behind{background:#f8d7da;color:#721c24;border:4px solid #dc3545}
+    .speedometer-status.ahead{background:#d4edda;color:#155724;border:3.6px solid #28a745}
+    .speedometer-status.ontrack{background:#fff3cd;color:#856404;border:3.6px solid #ffc107}
+    .speedometer-status.behind{background:#f8d7da;color:#721c24;border:3.6px solid #dc3545}
     
     .fuel-scene{
       height:180px;
@@ -503,7 +483,7 @@
       top:50%;
       left:50%;
       transform:translate(-50%,-50%);
-      font-size:22px;
+      font-size:26.4px;
       font-weight:900;
       color:#334155;
       letter-spacing:5px;
@@ -690,16 +670,11 @@
       animation:glow-pulse 3.5s ease-in-out infinite;
     }
     
-    @keyframes glow-pulse{
-      0%,100%{opacity:.7}
-      50%{opacity:1}
-    }
-    
     .status-badge{
       display:inline-block;
-      padding:12px 28px;
+      padding:13px 31px;
       border-radius:32px;
-      font-size:15px;
+      font-size:21.6px;
       font-weight:900;
       margin-top:6px;
       text-transform:uppercase;
@@ -716,6 +691,10 @@
       .palette-selector{grid-template-columns:1fr}
       .input-grid{grid-template-columns:1fr}
     }
+
+    /* ===== AJUSTE SOLICITADO AGORA: META -10% ADICIONAL ===== */
+    .values .value-item:first-child .value-label{ font-size:11.664px; }   /* 12.96px -> -10% */
+    .values .value-item:first-child .value-amount{ font-size:25.272px; } /* 28.08px -> -10% */
   </style>
 </head>
 <body>
@@ -1085,32 +1064,39 @@
     async function exportCard(cardId, fileName){
       const node = document.getElementById(cardId);
       const button = node.querySelector('.export-btn');
-      
-      // Apenas ocultar o botão de exportar
       button.style.display = 'none';
-      
-      // Aguardar renderização
       await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Capturar o card
       const canvas = await html2canvas(node, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false
+        scale: 3, useCORS: true, allowTaint: true, logging: false, backgroundColor: null
       });
-      
-      // Restaurar botão
+      const finalCanvas = document.createElement('canvas');
+      const ctx = finalCanvas.getContext('2d');
+      finalCanvas.width = canvas.width;
+      finalCanvas.height = canvas.height;
+      ctx.clearRect(0, 0, finalCanvas.width, finalCanvas.height);
+      ctx.save();
+      ctx.beginPath();
+      const radius = 90;
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(w - radius, 0);
+      ctx.arcTo(w, 0, w, radius, radius);
+      ctx.lineTo(w, h - radius);
+      ctx.arcTo(w, h, w - radius, h, radius);
+      ctx.lineTo(radius, h);
+      ctx.arcTo(0, h, 0, h - radius, radius);
+      ctx.lineTo(0, radius);
+      ctx.arcTo(0, 0, radius, 0, radius);
+      ctx.closePath();
+      ctx.clip();
+      ctx.drawImage(canvas, 0, 0);
+      ctx.restore();
       button.style.display = 'block';
-      
-      // Download da imagem
-      const url = canvas.toDataURL('image/png', 1.0);
+      const url = finalCanvas.toDataURL('image/png', 1.0);
       const a = document.createElement('a');
-      a.href = url;
-      a.download = `${fileName}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      a.href = url; a.download = `${fileName}.png`;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
     }
     
     changePalette('royal');
