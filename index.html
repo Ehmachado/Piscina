@@ -402,20 +402,20 @@
       width:100px;
       height:100px;
       border-radius:50%;
-      background:#ffffffee;
-      box-shadow:0 15px 50px rgba(0,0,0,.3), inset 0 0 0 8px #ffffff;
+      background:linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      box-shadow:0 15px 50px rgba(0,0,0,.3), inset 0 0 0 8px #e5e7eb;
       font-weight:900;
       font-size:26px;
-      color:#111827;
-      text-shadow:0 2px 5px rgba(255,255,255,.9);
-      border:4px solid #e5e7eb;
+      color:#1a1a2e;
+      text-shadow:0 2px 4px rgba(0,0,0,.1);
+      border:5px solid #667eea;
     }
     
     .percent-badge small{
       display:block;
       font-size:11px;
       letter-spacing:0.5px;
-      color:#6b7280;
+      color:#667eea;
       margin-top:4px;
       font-weight:900;
     }
@@ -1086,69 +1086,25 @@
       const node = document.getElementById(cardId);
       const button = node.querySelector('.export-btn');
       
-      // Apenas ocultar o botão de exportar, manter tudo mais visível
-      const originalButtonDisplay = button.style.display;
+      // Apenas ocultar o botão de exportar
       button.style.display = 'none';
       
-      // Forçar repaint
-      node.offsetHeight;
+      // Aguardar renderização
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      // Aguardar para garantir que as mudanças foram aplicadas
-      await new Promise(resolve => setTimeout(resolve, 300));
-      
-      // Capturar o card completo
+      // Capturar o card
       const canvas = await html2canvas(node, {
-        scale: 3,
+        scale: 2,
         useCORS: true,
         allowTaint: true,
-        logging: false,
-        backgroundColor: null,
-        imageTimeout: 0,
-        removeContainer: true,
-        foreignObjectRendering: true,
-        ignoreElements: function(element) {
-          return false;
-        }
+        logging: false
       });
       
-      // Criar canvas final com fundo do card
-      const finalCanvas = document.createElement('canvas');
-      const ctx = finalCanvas.getContext('2d');
-      finalCanvas.width = canvas.width;
-      finalCanvas.height = canvas.height;
-      
-      // Obter a cor de fundo do card
-      const computedStyle = window.getComputedStyle(node);
-      const bgImage = computedStyle.backgroundImage;
-      const bgColor = computedStyle.backgroundColor;
-      
-      // Aplicar o fundo do card
-      if (bgImage && bgImage !== 'none') {
-        // Tentar extrair as cores do gradiente
-        const match = bgImage.match(/linear-gradient\([^)]+\)/);
-        if (match) {
-          const gradient = ctx.createLinearGradient(0, 0, finalCanvas.width, finalCanvas.height);
-          // Fallback para cores aproximadas
-          gradient.addColorStop(0, '#f0f3ff');
-          gradient.addColorStop(1, '#e8edff');
-          ctx.fillStyle = gradient;
-        } else {
-          ctx.fillStyle = bgColor || '#ffffff';
-        }
-      } else {
-        ctx.fillStyle = bgColor || '#ffffff';
-      }
-      
-      ctx.fillRect(0, 0, finalCanvas.width, finalCanvas.height);
-      
-      // Desenhar o card capturado
-      ctx.drawImage(canvas, 0, 0);
-      
       // Restaurar botão
-      button.style.display = originalButtonDisplay;
+      button.style.display = 'block';
       
       // Download da imagem
-      const url = finalCanvas.toDataURL('image/png', 1.0);
+      const url = canvas.toDataURL('image/png', 1.0);
       const a = document.createElement('a');
       a.href = url;
       a.download = `${fileName}.png`;
