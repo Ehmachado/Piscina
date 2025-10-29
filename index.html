@@ -1085,15 +1085,23 @@
       badge.style.display = 'none';
       
       // Aguardar para garantir que as mudanças foram aplicadas
-      await new Promise(resolve => setTimeout(resolve, 150));
+      await new Promise(resolve => setTimeout(resolve, 200));
       
-      // Capturar o card completo
+      // Forçar scroll para garantir que o card está visível
+      node.scrollIntoView({ behavior: 'instant', block: 'start' });
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Capturar o card completo com configurações otimizadas
       const canvas = await html2canvas(node, {
         scale: 2,
         useCORS: true,
         allowTaint: true,
         logging: false,
-        backgroundColor: null
+        backgroundColor: '#ffffff',
+        windowWidth: node.scrollWidth,
+        windowHeight: node.scrollHeight,
+        width: node.offsetWidth,
+        height: node.offsetHeight
       });
       
       // Restaurar elementos ocultos
